@@ -349,7 +349,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
   - QA happy: tomorrow from past meeting date→correct date regardless today's date; failure: ambiguous Friday stays null, fabricated quote rejected, overlap exact duplicate collapses, all input ranges covered. Evidence `.omo/evidence/task-7-plan.txt`.
   - Commit: Y | `feat(analysis): validate grounded actions and due dates`.
 
-- [ ] 8. Durable checkpoints cho on-demand bounded execution
+- [x] 8. Durable checkpoints cho on-demand bounded execution
   - What: run/step engine S4 including claims, leases, fencing, cancel/resume, no outbound side effect during DB transaction. Shared primitive reusable by chat without exposing arbitrary job execution API.
   - Parallelization: Wave 2; depends 2,3,6; blocks 10,14,15.
   - References: S3/S4/S10; `src/server/analysis/runs/`, `tests/integration/run-engine.test.ts`.
