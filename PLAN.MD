@@ -401,7 +401,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
   - QA happy: English stemming and exact ticket/name lookup, stable pagination; failure: trash/current-revision/filter boundary excludes old docs, SQL-injection text treated literal, pure Vietnamese lexical limitation not mislabeled semantic. Evidence `.omo/evidence/task-13-plan.txt`.
   - Commit: Y | `feat(search): add scoped PostgreSQL transcript retrieval`.
 
-- [ ] 14. Grounded read-only chat orchestration và aggregates
+- [x] 14. Grounded read-only chat orchestration và aggregates
   - What: S7 allowlisted pipeline, TASK_HISTORY/CLARIFY, separate approved/pending lists, app-time vs meeting-evidence answers, Vietnamese→English expansion, SQL aggregates, source dependency closure and per-type citations; no live-model evaluation.
   - Parallelization: Wave 3; depends 3,4,8–11,13; blocks 15,16,19.
   - References: S6/S7/S10; `src/server/chat/`, `src/app/api/{conversations,chat-runs}/`, `tests/integration/chat.test.ts`.
