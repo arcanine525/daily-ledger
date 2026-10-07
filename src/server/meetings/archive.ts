@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { z } from "zod";
 import { HttpError } from "../auth/session";
 import { database } from "../db/client";
+import { indexMeeting } from "../search/index";
 import { transcriptSegments } from "./parser";
 
 const meetingInput = z.object({
@@ -100,6 +101,7 @@ export async function createMeeting(
         },
       },
     });
+    await indexMeeting(db, meeting.id);
     await db.requestRecord.create({
       data: { ownerId, key, bodyHash, meetingId: meeting.id },
     });
@@ -155,6 +157,7 @@ export async function reviseMeeting(
       where: { meetingId: id },
       data: { sourceChanged: true },
     });
+    await indexMeeting(db, id);
     return revision;
   });
 }

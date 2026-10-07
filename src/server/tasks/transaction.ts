@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { z } from "zod";
 import type { Prisma } from "../../generated/prisma/client";
 import { HttpError } from "../auth/session";
+import { indexTask } from "../search/index";
 
 export type TaskRow = Prisma.TaskGetPayload<{ include: { assignments: true } }>;
 export const hash = (input: unknown) =>
@@ -115,7 +116,7 @@ export async function createTaskTx(
     where: { id: input.projectId, ownerId: input.ownerId },
   });
   if (!project) throw new HttpError(422, "INVALID_PROJECT");
-  return tx.task.create({
+  const task = await tx.task.create({
     data: {
       projectId: input.projectId,
       title: input.title,
@@ -132,4 +133,6 @@ export async function createTaskTx(
     },
     include: { assignments: true },
   });
+  await indexTask(tx, task.id);
+  return task;
 }

@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { Prisma } from "../../generated/prisma/client";
 import { HttpError } from "../auth/session";
 import { database } from "../db/client";
+import { indexTask } from "../search/index";
 import { createInput, editInput } from "./contracts";
 import {
   assignments,
@@ -127,6 +128,7 @@ export async function editTaskTx(
     fields,
     ...(input.sourceAt ? { sourceAt: input.sourceAt } : {}),
   });
+  await indexTask(tx, updated.id);
   return updated;
 }
 export async function editTask(ownerId: string, id: string, input: unknown) {

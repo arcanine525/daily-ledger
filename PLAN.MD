@@ -392,7 +392,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
   - QA happy: paste→analyze→view quote→confirm cross-day task; failure: provider unavailable shows retry without losing raw, second tab cannot duplicate actions, unknown owner not shown under My. Evidence `.omo/evidence/task-12-plan/` screenshots/trace.
   - Commit: Y | `feat(ui): deliver meeting and task workflows`.
 
-- [ ] 13. PostgreSQL lexical retrieval và visibility boundaries
+- [x] 13. PostgreSQL lexical retrieval và visibility boundaries
   - What: index current raw segments, valid current summary and tasks; ranked FTS + exact normalized names/IDs, deterministic paging, project/date/meeting intersection, no stale/trash documents. Index creation done via SQL migrations.
   - Parallelization: Wave 3; depends 2,6,10,11; blocks 14,19.
   - References: S3/S7/S9,R8; `src/server/search/`, `prisma/migrations/`, `tests/integration/search.test.ts`.

@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { z } from "zod";
 import type { Prisma } from "../../generated/prisma/client";
 import { HttpError } from "../auth/session";
+import { indexMeeting } from "../search/index";
 import type { Extraction } from "./contracts";
 import type { NormalizedItem } from "./pipeline-contracts";
 import { mapCheckpoint, matchSchema } from "./pipeline-contracts";
@@ -241,5 +242,6 @@ export async function publishAnalysis(
     where: { id: input.meetingId },
     data: { activeAnalysisId: result.id },
   });
+  await indexMeeting(tx, input.meetingId);
   return result;
 }
