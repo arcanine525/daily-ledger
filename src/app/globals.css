@@ -1,0 +1,53 @@
+:root {
+  --ink: #16181d;
+  --muted: #536070;
+  --paper: #f2f3f5;
+  --line: #d0d5dd;
+  --accent: #2456f0;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font:
+    16px / 1.6 system-ui,
+    sans-serif;
+}
+.shell {
+  max-width: 960px;
+  margin: auto;
+  padding: 48px 24px;
+}
+nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 24px;
+}
+a {
+  color: var(--accent);
+}
+.eyebrow {
+  margin-top: 64px;
+  letter-spacing: 0.12em;
+  font-size: 12px;
+  color: var(--muted);
+}
+h1 {
+  font-size: clamp(28px, 5vw, 48px);
+  line-height: 1.2;
+  max-width: 700px;
+}
+section {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 24px;
+  margin-top: 32px;
+}
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}

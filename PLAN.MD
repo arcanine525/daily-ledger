@@ -290,7 +290,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
 ## Todos
 > Implementation + Test = ONE todo. Never separate.
 <!-- APPEND TASK BATCHES BELOW THIS LINE WITH edit/apply_patch - never rewrite the headers above. -->
-- [ ] 1. Bootstrap typed Next app và deterministic test harness
+- [x] 1. Bootstrap typed Next app và deterministic test harness
   - What: tạo package/config/source layout theo S2; exact dependency lock, scripts theo Verification; fake AI protocol fixtures, isolated DB config, fail-on-zero-tests; baseline EN/VI shell. Không gọi AI thật. Kiểm tra existing/untracked files trước tạo; không overwrite `.codegraph/` hay file người dùng. Kiểm tra `PLAN.MD` và canonical copy giống nhau, không overwrite nếu phát hiện chỉnh sửa chưa đồng bộ.
   - Parallelization: Wave 1; depends —; blocks 2–5.
   - References: S1–S2, S11, R7; `package.json`, `pnpm-lock.yaml`, `tsconfig.json`, `vitest.*.config.ts`, `playwright.config.ts`, `tests/unit/env.test.ts`.

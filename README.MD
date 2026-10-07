@@ -4,8 +4,8 @@ Lưu transcript cuộc họp daily, trích xuất công việc và tra cứu l�
 
 ## Trạng thái dự án
 
-Dự án hiện có **kế hoạch triển khai và wireframe HTML tương tác**. Ứng dụng Next.js,
-backend, database và đăng nhập thực tế **chưa được triển khai**.
+Dự án có **kế hoạch triển khai, wireframe và nền tảng Next.js (Task 1)**.
+Đăng nhập, database nghiệp vụ và phân tích AI đang được triển khai theo Phase 1–2.
 
 Wireframe sử dụng dữ liệu mô phỏng trong trình duyệt, không kết nối AI hoặc DB.
 Không nhập transcript nhạy cảm, mật khẩu hay API token thật vào bản demo.
@@ -62,8 +62,21 @@ của ứng dụng production. Nút VI/EN chuyển nhãn giao diện; dữ liệ
 FE và BE tạm thời cùng ứng dụng Next.js. Business logic dự kiến nằm trong
 `src/server/`, Route Handlers là lớp HTTP mỏng để có thể tách BE sau này.
 
-Package scripts, Docker Compose, migrations và hướng dẫn deploy sẽ được bổ sung
-khi triển khai; hiện chưa có lệnh build hoặc chạy ứng dụng production.
+Nền tảng yêu cầu Node22 và pnpm10 (xem `.node-version` và `package.json`).
+
+```bash
+pnpm install --frozen-lockfile
+pnpm dev
+pnpm lint
+pnpm typecheck
+pnpm test:unit
+pnpm test:integration
+pnpm build
+pnpm test:e2e
+```
+
+Playwright hiện dùng Chrome đã cài trên máy. Integration suite sẽ được mở rộng với
+PostgreSQL ở Task 2; fixture AI dùng dữ liệu giả lập, không gửi request provider thật.
 
 ## Tài liệu
 

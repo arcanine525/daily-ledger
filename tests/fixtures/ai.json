@@ -1,0 +1,23 @@
+{
+  "openai": {
+    "choices": [
+      {
+        "message": { "content": "{\"summary\":\"Fixture only\",\"todos\":[]}" }
+      }
+    ]
+  },
+  "anthropic": {
+    "content": [
+      { "type": "text", "text": "{\"summary\":\"Fixture only\",\"todos\":[]}" }
+    ]
+  },
+  "gemini": {
+    "candidates": [
+      {
+        "content": {
+          "parts": [{ "text": "{\"summary\":\"Fixture only\",\"todos\":[]}" }]
+        }
+      }
+    ]
+  }
+}

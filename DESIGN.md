@@ -1,5 +1,12 @@
 # DESIGN.md — Wireframe design system (scoped to `wireframe.html` ONLY)
 
+## Phase 1 application foundation contract
+
+The initial Next.js foundation reuses the wireframe's ink #16181d, paper #f2f3f5,
+border #d0d5dd, action blue #2456f0, and accessible secondary text #536070.
+System typography, 24/32/48px spacing, restrained 8px panel radius and visible focus.
+This exception covers the bilingual foundation page only, not the later full product UI.
+
 This document describes the design system of the **interactive wireframe prototype**
 (`wireframe.html`, root of this workspace). It is NOT the design system of the future
 Next.js application. PLAN.MD (S1–S13, Q1–Q28) remains the authoritative product spec;
