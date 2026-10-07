@@ -314,7 +314,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
   - QA happy: owner seed→login→private route→logout; failure: sixth failed IP login returns429, forged Origin/CSRF403, old session401 after CLI reset. CLI tested via pseudo-terminal so password absent argv/logs. Evidence `.omo/evidence/task-3-plan.txt` and Playwright trace.
   - Commit: Y | `feat(auth): secure single owner sessions and recovery`.
 
-- [ ] 4. Provider profiles, encryption và SSRF-safe transport
+- [x] 4. Provider profiles, encryption và SSRF-safe transport
   - What: S6 config revisions, write-only secrets, safe outbound transport, test connection plumbing, independent default slots; mock exact-origin bypass only in test/local. DNS pinning, no redirects and response cap shared by every adapter.
   - Parallelization: Wave 1; depends 1,2; blocks 9,10,14.
   - References: S3/S6/S8; `src/server/providers/{profiles,crypto,transport}/`, `src/app/api/providers/`, `tests/integration/provider-security.test.ts`.
