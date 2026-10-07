@@ -340,7 +340,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
   - QA happy: save 2-hour fixture and edit into v2, v1 unchanged; failure: oversize413, same idempotency key changed body409, provider outage does not affect save, parser unknown lines retained. Evidence `.omo/evidence/task-6-plan.txt`.
   - Commit: Y | `feat(meetings): preserve raw transcripts and revisions`.
 
-- [ ] 7. Evidence, assignee và deadline domain rules
+- [x] 7. Evidence, assignee và deadline domain rules
   - What: pure Zod extraction contract với five-section summary, multi-assignees, ACTION vs COMPLETION_REPORT; quote verifier, versioned identity resolver, deterministic dates/chunks. No model call trong pure modules; không expose reported status thành pending status.
   - Parallelization: Wave 2; depends 2,5,6; blocks 10,11.
   - References: S3–S5; `src/server/analysis/{contracts,evidence,identity,dates,chunking}/`, `tests/unit/extraction.test.ts`.
