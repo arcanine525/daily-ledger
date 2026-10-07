@@ -40,8 +40,8 @@ export function ProviderPanel({
       <h2>{en ? "AI profiles" : "Cấu hình AI"}</h2>
       <p>
         {en
-          ? "Tokens are write-only. Protocol adapters arrive in Task 9; no AI request is performed in Phase 1."
-          : "Token chỉ nhập, không trả lại. Protocol adapters ở Task 9; Phase 1 chưa gọi AI."}
+          ? "Tokens are write-only. Connection tests send a small real request and may incur provider charges. Automated tests use fixtures only."
+          : "Token chỉ nhập, không trả lại. Test kết nối gửi request thật và có thể tính phí. Kiểm thử tự động chỉ dùng fixture."}
       </p>
       <ul>
         {profiles.map((p) => (
@@ -68,11 +68,18 @@ export function ProviderPanel({
             </button>{" "}
             <button
               type="button"
-              onClick={() =>
-                run(() => callApi(`/api/providers/${p.id}/test`, "POST", {}))
-              }
+              onClick={() => {
+                if (
+                  confirm(
+                    en
+                      ? "Send a real model request? Provider charges may apply."
+                      : "Gửi request thật tới model? Provider có thể tính phí.",
+                  )
+                )
+                  run(() => callApi(`/api/providers/${p.id}/test`, "POST", {}));
+              }}
             >
-              {en ? "Check configuration" : "Kiểm tra cấu hình"}
+              {en ? "Test connection" : "Test kết nối"}
             </button>
           </li>
         ))}

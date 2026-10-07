@@ -357,7 +357,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
   - QA happy: finish step1 then reload/resume step2; failure: kill worker before commit, expire lease, reclaim, stale attempt commit rejected; completed replay no new rows; cancel cannot publish. Evidence `.omo/evidence/task-8-plan.txt`.
   - Commit: Y | `feat(runs): add fenced resumable on-demand steps`.
 
-- [ ] 9. Native protocol adapters cho ba loại provider
+- [x] 9. Native protocol adapters cho ba loại provider
   - What: OpenAI-compatible, Anthropic, Gemini structured/stream contracts; capabilities; typed 401/429/refusal/context errors; disable transport retries. Connection test integrates profiles. Validate official formats R4–R6 at implementation time.
   - Parallelization: Wave 2; depends 4; blocks 10,14.
   - References: S6, R4–R6; `src/server/providers/adapters/`, `tests/providers/adapters.test.ts`, `tests/fixtures/providers/`.

@@ -110,9 +110,10 @@ pnpm test:integration
 Test DB riêng ở port55433; database sử dụng local ở port55432 có volume bền vững.
 Không dùng database cloud/production cho integration tests.
 
-Provider profiles có API lưu/sửa/xóa và mã hóa AES-GCM. `/api/providers/[id]/test`
-hiện xác thực session và kiểm tra cấu hình, trả `ADAPTER_PENDING_TASK_9`; chưa gọi AI
-hay tuyên bố kết nối thành công. Protocol adapters và streaming sẽ có ở Task 9.
+Provider profiles có API lưu/sửa/xóa và mã hóa AES-GCM. Native adapters cho
+OpenAI-compatible, Anthropic và Gemini hỗ trợ JSON có schema và streaming.
+`/api/providers/[id]/test` gửi request model nhỏ khi user xác nhận (có thể tính phí);
+kiểm thử tự động chỉ dùng fixtures, chưa đánh giá chất lượng AI thực tế.
 
 ## Tài liệu
 

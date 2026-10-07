@@ -1,9 +1,12 @@
+import { z } from "zod";
 import {
   authenticate,
   HttpError,
   respond,
 } from "../../../../../server/auth/session";
 import { database } from "../../../../../server/db/client";
+import { generateStructured } from "../../../../../server/providers/adapters";
+import { runtimeProvider } from "../../../../../server/providers/runtime";
 import { validateUrl } from "../../../../../server/providers/transport";
 
 export async function POST(
@@ -24,13 +27,17 @@ export async function POST(
     const revision = profile.revisions[0];
     if (!revision?.ciphertext) throw new HttpError(422, "TOKEN_REQUIRED");
     validateUrl(revision.baseUrl);
-    return Response.json(
+    await generateStructured(
+      await runtimeProvider(session.ownerId, revision.id),
       {
-        code: "ADAPTER_PENDING_TASK_9",
-        endpointValidated: true,
-        inferencePerformed: false,
+        schema: z.object({ ok: z.boolean() }),
+        system: "Return an object with ok=true.",
+        user: "Connection test.",
       },
-      { status: 409, headers: { "Cache-Control": "no-store" } },
+    );
+    return Response.json(
+      { success: true, inferencePerformed: true },
+      { headers: { "Cache-Control": "no-store" } },
     );
   });
 }
