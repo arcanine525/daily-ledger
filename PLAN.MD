@@ -298,7 +298,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
   - QA happy: command above boots valid env fixture; failure: same test asserts missing DATABASE_URL/invalid encryption key fails with redacted config error; zero-test command exits nonzero. Evidence `.omo/evidence/task-1-plan.txt`.
   - Commit: Y | `chore(app): bootstrap typed app and test harness`.
 
-- [ ] 2. Tạo Prisma schema, SQL constraints và migration baseline
+- [x] 2. Tạo Prisma schema, SQL constraints và migration baseline
   - What: model S3 bao gồm participants/assignment snapshots, logical actions/occurrence joins, proposal decision fingerprints, per-field history và message dependency/tombstone; unique/partial indexes, FTS, Prisma7 adapter/direct URL. Test seed only, short transactions, không vector extension.
   - Parallelization: Wave 1; depends 1; blocks 3–8,11,13,15.
   - References: S3, S9, S11, R3/R8; `prisma/schema.prisma`, `prisma.config.ts`, `prisma/migrations/`, `src/server/db/`, `tests/integration/schema.test.ts`.

@@ -78,6 +78,20 @@ pnpm test:e2e
 Playwright hiện dùng Chrome đã cài trên máy. Integration suite sẽ được mở rộng với
 PostgreSQL ở Task 2; fixture AI dùng dữ liệu giả lập, không gửi request provider thật.
 
+### PostgreSQL local và test (Task 2)
+
+```bash
+docker compose up -d --wait db
+pnpm exec prisma migrate deploy
+pnpm exec prisma generate
+docker compose -f compose.test.yaml up -d --wait test-db
+DIRECT_URL=postgresql://ledger:ledger@127.0.0.1:55433/ledger_test pnpm exec prisma migrate deploy
+pnpm test:integration
+```
+
+Test DB riêng ở port55433; database sử dụng local ở port55432 có volume bền vững.
+Không dùng database cloud/production cho integration tests.
+
 ## Tài liệu
 
 | File | Nội dung |

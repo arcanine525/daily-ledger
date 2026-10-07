@@ -1,0 +1,485 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  BLOCKED
+  DONE
+  CANCELLED
+}
+
+enum RunState {
+  READY
+  RUNNING
+  PAUSED_RETRYABLE
+  FAILED
+  COMPLETED
+  CANCELLED
+}
+
+enum ProposalState {
+  PENDING
+  ACCEPTED
+  REJECTED
+  SUPERSEDED
+  STALE
+}
+
+enum ProposalKind {
+  CREATE
+  LINK
+  UPDATE
+}
+
+model Owner {
+  id            String            @id @default(uuid()) @db.Uuid
+  singleton     Int               @unique @default(1)
+  email         String            @unique
+  passwordHash  String
+  createdAt     DateTime          @default(now()) @db.Timestamptz(3)
+  sessions      Session[]
+  settings      UserSettings?
+  aliases       IdentityAlias[]
+  projects      Project[]
+  providers     ProviderProfile[]
+  conversations Conversation[]
+}
+
+model Session {
+  id        String   @id @default(uuid()) @db.Uuid
+  ownerId   String   @db.Uuid
+  tokenHash String   @unique
+  csrfHash  String
+  expiresAt DateTime @db.Timestamptz(3)
+  owner     Owner    @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([expiresAt])
+}
+
+model RateLimitBucket {
+  key       String   @id
+  count     Int      @default(0)
+  expiresAt DateTime @db.Timestamptz(3)
+}
+
+model UserSettings {
+  ownerId           String           @id @db.Uuid
+  uiLocale          String           @default("vi")
+  outputLocale      String           @default("vi")
+  timezone          String?
+  displayName       String           @default("")
+  analysisProfileId String?          @db.Uuid
+  chatProfileId     String?          @db.Uuid
+  owner             Owner            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  analysisProfile   ProviderProfile? @relation("AnalysisDefault", fields: [analysisProfileId], references: [id], onDelete: SetNull)
+  chatProfile       ProviderProfile? @relation("ChatDefault", fields: [chatProfileId], references: [id], onDelete: SetNull)
+}
+
+model IdentityAlias {
+  id         String @id @default(uuid()) @db.Uuid
+  ownerId    String @db.Uuid
+  label      String
+  normalized String
+  owner      Owner  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@unique([ownerId, normalized])
+}
+
+model ProviderProfile {
+  id               String                    @id @default(uuid()) @db.Uuid
+  ownerId          String                    @db.Uuid
+  name             String
+  type             String
+  deletedAt        DateTime?                 @db.Timestamptz(3)
+  owner            Owner                     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  revisions        ProviderProfileRevision[]
+  analysisDefaults UserSettings[]            @relation("AnalysisDefault")
+  chatDefaults     UserSettings[]            @relation("ChatDefault")
+}
+
+model ProviderProfileRevision {
+  id            String          @id @default(uuid()) @db.Uuid
+  profileId     String          @db.Uuid
+  number        Int
+  baseUrl       String
+  model         String
+  contextBudget Int             @default(32000)
+  capabilities  Json            @default("{}")
+  ciphertext    String?
+  nonce         String?
+  tag           String?
+  keyId         String?
+  createdAt     DateTime        @default(now()) @db.Timestamptz(3)
+  profile       ProviderProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  runs          AnalysisRun[]
+  chatRuns      ChatRun[]
+
+  @@unique([profileId, number])
+}
+
+model Project {
+  id           String               @id @default(uuid()) @db.Uuid
+  ownerId      String               @db.Uuid
+  name         String
+  archivedAt   DateTime?            @db.Timestamptz(3)
+  owner        Owner                @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+  participants ProjectParticipant[]
+  meetings     Meeting[]
+  tasks        Task[]
+  documents    SearchDocument[]
+}
+
+model ProjectParticipant {
+  id             String             @id @default(uuid()) @db.Uuid
+  projectId      String             @db.Uuid
+  displayName    String
+  isSelf         Boolean            @default(false)
+  mappingVersion Int                @default(1)
+  archivedAt     DateTime?          @db.Timestamptz(3)
+  project        Project            @relation(fields: [projectId], references: [id], onDelete: Restrict)
+  aliases        ParticipantAlias[]
+  assignments    TaskAssignment[]
+}
+
+model ParticipantAlias {
+  id            String             @id @default(uuid()) @db.Uuid
+  participantId String             @db.Uuid
+  normalized    String
+  participant   ProjectParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@unique([participantId, normalized])
+}
+
+model Meeting {
+  id                    String                    @id @default(uuid()) @db.Uuid
+  projectId             String                    @db.Uuid
+  title                 String
+  occurredAt            DateTime                  @db.Timestamptz(3)
+  meetingTimezone       String
+  currentRevisionNumber Int                       @default(1)
+  activeAnalysisId      String?                   @unique @db.Uuid
+  deletedAt             DateTime?                 @db.Timestamptz(3)
+  project               Project                   @relation(fields: [projectId], references: [id], onDelete: Restrict)
+  revisions             TranscriptRevision[]
+  identity              MeetingIdentityOverride[]
+  runs                  AnalysisRun[]
+  analyses              AnalysisVersion[]         @relation("MeetingAnalyses")
+  activeAnalysis        AnalysisVersion?          @relation("ActiveAnalysis", fields: [activeAnalysisId], references: [id], onDelete: SetNull)
+  actions               MeetingAction[]
+  documents             SearchDocument[]
+
+  @@index([projectId, occurredAt])
+}
+
+model TranscriptRevision {
+  id        String              @id @default(uuid()) @db.Uuid
+  meetingId String              @db.Uuid
+  number    Int
+  rawText   String
+  sha256    String
+  createdAt DateTime            @default(now()) @db.Timestamptz(3)
+  meeting   Meeting             @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  segments  TranscriptSegment[]
+  runs      AnalysisRun[]
+  analyses  AnalysisVersion[]
+  citations Citation[]
+
+  @@unique([meetingId, number])
+}
+
+model TranscriptSegment {
+  id          String             @id @default(uuid()) @db.Uuid
+  revisionId  String             @db.Uuid
+  ordinal     Int
+  startOffset Int
+  endOffset   Int
+  speaker     String?
+  timestamp   String?
+  revision    TranscriptRevision @relation(fields: [revisionId], references: [id], onDelete: Cascade)
+
+  @@unique([revisionId, ordinal])
+}
+
+model MeetingIdentityOverride {
+  id              String  @id @default(uuid()) @db.Uuid
+  meetingId       String  @db.Uuid
+  speaker         String
+  mapping         Json
+  isSharedSpeaker Boolean @default(false)
+  meeting         Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+
+  @@unique([meetingId, speaker])
+}
+
+model AnalysisRun {
+  id                String                  @id @default(uuid()) @db.Uuid
+  meetingId         String                  @db.Uuid
+  revisionId        String                  @db.Uuid
+  profileRevisionId String                  @db.Uuid
+  state             RunState                @default(READY)
+  snapshot          Json
+  promptVersion     String
+  schemaVersion     String
+  leaseUntil        DateTime?               @db.Timestamptz(3)
+  fencingVersion    Int                     @default(0)
+  createdAt         DateTime                @default(now()) @db.Timestamptz(3)
+  meeting           Meeting                 @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  revision          TranscriptRevision      @relation(fields: [revisionId], references: [id], onDelete: Cascade)
+  profile           ProviderProfileRevision @relation(fields: [profileRevisionId], references: [id], onDelete: Restrict)
+  steps             AnalysisStep[]
+  result            AnalysisVersion?
+}
+
+model AnalysisStep {
+  id         String      @id @default(uuid()) @db.Uuid
+  runId      String      @db.Uuid
+  stepKey    String
+  state      String      @default("pending")
+  attempt    Int         @default(0)
+  checkpoint Json?
+  error      Json?
+  usage      Json?
+  run        AnalysisRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@unique([runId, stepKey])
+}
+
+model AnalysisVersion {
+  id          String             @id @default(uuid()) @db.Uuid
+  meetingId   String             @db.Uuid
+  revisionId  String             @db.Uuid
+  runId       String             @unique @db.Uuid
+  number      Int
+  summary     Json
+  locale      String
+  createdAt   DateTime           @default(now()) @db.Timestamptz(3)
+  meeting     Meeting            @relation("MeetingAnalyses", fields: [meetingId], references: [id], onDelete: Cascade)
+  activeFor   Meeting?           @relation("ActiveAnalysis")
+  revision    TranscriptRevision @relation(fields: [revisionId], references: [id], onDelete: Cascade)
+  run         AnalysisRun        @relation(fields: [runId], references: [id], onDelete: Cascade)
+  occurrences TodoOccurrence[]
+
+  @@unique([meetingId, number])
+}
+
+model TodoOccurrence {
+  id             String                    @id @default(uuid()) @db.Uuid
+  analysisId     String                    @db.Uuid
+  kind           String
+  title          String
+  assignees      Json
+  evidence       Json
+  dueDate        DateTime?                 @db.Date
+  reportedStatus TaskStatus?
+  analysis       AnalysisVersion           @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+  actionLinks    MeetingActionOccurrence[]
+}
+
+model MeetingAction {
+  id               String                    @id @default(uuid()) @db.Uuid
+  meetingId        String                    @db.Uuid
+  taskId           String?                   @db.Uuid
+  title            String
+  assignees        Json
+  dueDate          DateTime?                 @db.Date
+  reviewState      ProposalState             @default(PENDING)
+  manuallyEditedAt DateTime?                 @db.Timestamptz(3)
+  sourceChanged    Boolean                   @default(false)
+  version          Int                       @default(1)
+  meeting          Meeting                   @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  task             Task?                     @relation(fields: [taskId], references: [id], onDelete: SetNull)
+  occurrences      MeetingActionOccurrence[]
+  proposals        TaskProposal[]
+}
+
+model MeetingActionOccurrence {
+  actionId     String         @db.Uuid
+  occurrenceId String         @db.Uuid
+  action       MeetingAction  @relation(fields: [actionId], references: [id], onDelete: Cascade)
+  occurrence   TodoOccurrence @relation(fields: [occurrenceId], references: [id], onDelete: Cascade)
+
+  @@id([actionId, occurrenceId])
+}
+
+model Task {
+  id            String           @id @default(uuid()) @db.Uuid
+  projectId     String           @db.Uuid
+  origin        String
+  title         String
+  dueDate       DateTime?        @db.Date
+  status        TaskStatus       @default(TODO)
+  version       Int              @default(1)
+  fieldVersions Json             @default("{}")
+  createdAt     DateTime         @default(now()) @db.Timestamptz(3)
+  project       Project          @relation(fields: [projectId], references: [id], onDelete: Restrict)
+  assignments   TaskAssignment[]
+  events        TaskEvent[]
+  evidence      TaskEvidence[]
+  actions       MeetingAction[]
+  proposals     TaskProposal[]
+  citations     Citation[]
+}
+
+model TaskAssignment {
+  taskId         String             @db.Uuid
+  participantId  String             @db.Uuid
+  nameSnapshot   String
+  mappingVersion Int
+  task           Task               @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  participant    ProjectParticipant @relation(fields: [participantId], references: [id], onDelete: Restrict)
+
+  @@id([taskId, participantId])
+}
+
+model TaskEvent {
+  id               String     @id @default(uuid()) @db.Uuid
+  taskId           String     @db.Uuid
+  kind             String
+  before           Json
+  after            Json
+  changedFields    String[]
+  recordedAt       DateTime   @default(now()) @db.Timestamptz(3)
+  effectiveAt      DateTime   @default(now()) @db.Timestamptz(3)
+  sourceOccurredAt DateTime?  @db.Timestamptz(3)
+  task             Task       @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  citations        Citation[]
+}
+
+model TaskEvidence {
+  id               String  @id @default(uuid()) @db.Uuid
+  taskId           String  @db.Uuid
+  sourceMeetingId  String? @db.Uuid
+  sourceRevisionId String? @db.Uuid
+  quote            String?
+  sourceChanged    Boolean @default(false)
+  sourceDeleted    Boolean @default(false)
+  task             Task    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model TaskProposal {
+  id                  String        @id @default(uuid()) @db.Uuid
+  actionId            String        @db.Uuid
+  taskId              String?       @db.Uuid
+  kind                ProposalKind
+  state               ProposalState @default(PENDING)
+  expectedTaskVersion Int?
+  baseFieldVersions   Json
+  readFields          String[]
+  writeFields         String[]
+  changes             Json
+  evidence            Json
+  sourceOccurredAt    DateTime      @db.Timestamptz(3)
+  fingerprint         String
+  action              MeetingAction @relation(fields: [actionId], references: [id], onDelete: Cascade)
+  task                Task?         @relation(fields: [taskId], references: [id], onDelete: SetNull)
+}
+
+model ProposalDecision {
+  id             String        @id @default(uuid()) @db.Uuid
+  idempotencyKey String        @unique
+  fingerprint    String
+  outcome        ProposalState
+  reason         String?
+  payload        Json
+  createdAt      DateTime      @default(now()) @db.Timestamptz(3)
+
+  @@index([fingerprint])
+}
+
+model SearchDocument {
+  id             String                   @id @default(uuid()) @db.Uuid
+  projectId      String                   @db.Uuid
+  meetingId      String?                  @db.Uuid
+  sourceId       String                   @db.Uuid
+  kind           String
+  text           String
+  normalizedText String
+  englishVector  Unsupported("tsvector")?
+  simpleVector   Unsupported("tsvector")?
+  project        Project                  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  meeting        Meeting?                 @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+
+  @@index([sourceId])
+}
+
+model Conversation {
+  id       String        @id @default(uuid()) @db.Uuid
+  ownerId  String        @db.Uuid
+  title    String
+  owner    Owner         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  messages ChatMessage[]
+  runs     ChatRun[]
+}
+
+model ChatMessage {
+  id              String                  @id @default(uuid()) @db.Uuid
+  conversationId  String                  @db.Uuid
+  role            String
+  body            String
+  state           String                  @default("pending")
+  contextEligible Boolean                 @default(true)
+  filters         Json
+  createdAt       DateTime                @default(now()) @db.Timestamptz(3)
+  conversation    Conversation            @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  citations       Citation[]
+  dependencies    ChatMessageDependency[] @relation("Dependent")
+  dependents      ChatMessageDependency[] @relation("ContextSource")
+}
+
+model ChatMessageDependency {
+  messageId        String      @db.Uuid
+  contextMessageId String      @db.Uuid
+  message          ChatMessage @relation("Dependent", fields: [messageId], references: [id], onDelete: Cascade)
+  contextMessage   ChatMessage @relation("ContextSource", fields: [contextMessageId], references: [id], onDelete: Restrict)
+
+  @@id([messageId, contextMessageId])
+}
+
+model Citation {
+  id            String              @id @default(uuid()) @db.Uuid
+  messageId     String              @db.Uuid
+  revisionId    String?             @db.Uuid
+  taskId        String?             @db.Uuid
+  eventId       String?             @db.Uuid
+  label         String
+  quote         String?
+  startOffset   Int?
+  endOffset     Int?
+  sourceDeleted Boolean             @default(false)
+  message       ChatMessage         @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  revision      TranscriptRevision? @relation(fields: [revisionId], references: [id], onDelete: SetNull)
+  task          Task?               @relation(fields: [taskId], references: [id], onDelete: SetNull)
+  event         TaskEvent?          @relation(fields: [eventId], references: [id], onDelete: SetNull)
+}
+
+model ChatRun {
+  id                String                  @id @default(uuid()) @db.Uuid
+  conversationId    String                  @db.Uuid
+  profileRevisionId String                  @db.Uuid
+  snapshot          Json
+  state             RunState                @default(READY)
+  leaseUntil        DateTime?               @db.Timestamptz(3)
+  fencingVersion    Int                     @default(0)
+  conversation      Conversation            @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  profile           ProviderProfileRevision @relation(fields: [profileRevisionId], references: [id], onDelete: Restrict)
+  steps             ChatStep[]
+}
+
+model ChatStep {
+  id         String  @id @default(uuid()) @db.Uuid
+  runId      String  @db.Uuid
+  stepKey    String
+  state      String  @default("pending")
+  checkpoint Json?
+  attempt    Int     @default(0)
+  run        ChatRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@unique([runId, stepKey])
+}
