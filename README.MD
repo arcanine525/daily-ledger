@@ -4,8 +4,9 @@ Lưu transcript cuộc họp daily, trích xuất công việc và tra cứu l�
 
 ## Trạng thái dự án
 
-Dự án có **kế hoạch triển khai, wireframe và nền tảng Next.js (Task 1)**.
-Đăng nhập, database nghiệp vụ và phân tích AI đang được triển khai theo Phase 1–2.
+Dự án đã có **Phase 1 (Tasks 1–5)**: nền tảng Next.js, Prisma schema/migrations,
+đăng nhập, cấu hình provider và workspace. Transcript, phân tích AI, task và chat
+chưa được triển khai; thuộc Phase 2–4.
 
 Task 3 đã bổ sung session cá nhân và form đăng nhập. Chép `.env.example` thành
 `.env`, tạo key mã hóa ngẫu nhiên theo hướng dẫn trong file rồi chạy:
@@ -88,8 +89,12 @@ pnpm build
 pnpm test:e2e
 ```
 
-Playwright hiện dùng Chrome đã cài trên máy. Integration suite sẽ được mở rộng với
-PostgreSQL ở Task 2; fixture AI dùng dữ liệu giả lập, không gửi request provider thật.
+Playwright hiện dùng Chrome đã cài trên máy. Integration suite dùng PostgreSQL thật
+ở DB test riêng; fixture AI là dữ liệu giả lập, không gửi request provider thật.
+
+Sau đăng nhập, mở `/vi/settings` hoặc `/en/settings` để lưu tên/aliases, ngôn ngữ,
+múi giờ, các provider, dự án và người tham gia. Giao diện Phase 1 là foundation;
+layout sản phẩm đầy đủ theo wireframe thuộc các task UI tiếp theo.
 
 ### PostgreSQL local và test (Task 2)
 
@@ -128,5 +133,5 @@ hay tuyên bố kết nối thành công. Protocol adapters và streaming sẽ c
 
 ## Bước tiếp theo
 
-Triển khai theo `PLAN.MD`: nền tảng và DB → transcript/phân tích → task/chat →
-hoàn thiện, kiểm thử và deploy. Việc tạo README không bắt đầu triển khai ứng dụng.
+Tiếp theo là Task 6: nhập transcript và immutable revisions. Không bắt đầu Phase 2
+trừ khi có yêu cầu mới. Quy tắc mỗi task một commit + push nằm trong `AGENT.MD`.

@@ -40,6 +40,9 @@ export default async function Workspace({
           ? "Your workspace foundation is ready. Meeting analysis will arrive in Phase 2."
           : "Nền tảng workspace đang được xây dựng. Phân tích cuộc họp sẽ được triển khai ở Phase 2."}
       </p>
+      <Link href={`/${locale}/settings`}>
+        {english ? "Open workspace settings" : "Mở cài đặt workspace"}
+      </Link>
       <section>
         <h2>{english ? "Getting started" : "Bắt đầu"}</h2>
         <p>

@@ -75,3 +75,23 @@ button {
   font: inherit;
   cursor: pointer;
 }
+input[type="checkbox"] {
+  display: inline-block;
+  width: auto;
+  margin-right: 8px;
+}
+li {
+  overflow-wrap: anywhere;
+  margin: 16px 0;
+}
+li button,
+nav button {
+  margin: 4px;
+}
+article {
+  border-top: 1px solid var(--line);
+  padding: 24px 0;
+}
+form {
+  max-width: 680px;
+}

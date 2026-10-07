@@ -1,4 +1,9 @@
-import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
+import {
+  createHash,
+  createHmac,
+  randomBytes,
+  timingSafeEqual,
+} from "node:crypto";
 import { database } from "../db/client";
 import { parseEnvironment } from "../env";
 import { verifyPassword } from "./password";
@@ -13,6 +18,17 @@ export class HttpError extends Error {
 }
 export function tokenHash(value: string) {
   return createHash("sha256").update(value).digest("hex");
+}
+export function sessionCsrf(token: string) {
+  return createHmac(
+    "sha256",
+    Buffer.from(
+      parseEnvironment(process.env).PROVIDER_ENCRYPTION_KEY,
+      "base64",
+    ),
+  )
+    .update(token)
+    .digest("hex");
 }
 export function cookie(request: Request, name: string) {
   return (request.headers.get("cookie") ?? "")
@@ -73,7 +89,7 @@ export async function login(input: {
   if (!owner || !(await verifyPassword(input.password, owner.passwordHash)))
     throw new HttpError(401, "INVALID_CREDENTIALS");
   const token = randomBytes(32).toString("hex"),
-    csrf = randomBytes(32).toString("hex");
+    csrf = sessionCsrf(token);
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
   await db.session.create({
     data: {
@@ -94,6 +110,8 @@ export async function respond(action: () => Promise<Response>) {
   try {
     return await action();
   } catch (error) {
+    if (error instanceof SyntaxError)
+      return Response.json({ code: "INVALID_JSON" }, { status: 400 });
     if (error instanceof HttpError)
       return Response.json(
         { code: error.code },

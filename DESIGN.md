@@ -5,7 +5,9 @@
 The initial Next.js foundation reuses the wireframe's ink #16181d, paper #f2f3f5,
 border #d0d5dd, action blue #2456f0, and accessible secondary text #536070.
 System typography, 24/32/48px spacing, restrained 8px panel radius and visible focus.
-This exception covers the bilingual foundation page only, not the later full product UI.
+This exception covers Phase 1 login and workspace settings panels as well as the
+bilingual foundation page, not the later full product UI. Panels are modular,
+single-column responsive forms, with shared button/input styles and 44px-class targets.
 
 This document describes the design system of the **interactive wireframe prototype**
 (`wireframe.html`, root of this workspace). It is NOT the design system of the future

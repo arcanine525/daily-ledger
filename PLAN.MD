@@ -322,7 +322,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
   - QA happy: encrypt/save/read metadata/rotate test key; failure: private IPv4/IPv6, DNS rebinding, redirect, URL credentials rejected before socket request; cloud bypass rejected. Evidence `.omo/evidence/task-4-plan.txt`.
   - Commit: Y | `feat(providers): protect configurable AI endpoints and secrets`.
 
-- [ ] 5. Projects, identity settings, locale và timezone setup
+- [x] 5. Projects, identity settings, locale và timezone setup
   - What: project create/archive, settings, global self aliases và project participants/aliases, explicit future-only merge mapping; profile slots/timezone/locale. No sharing/membership.
   - Parallelization: Wave 1; depends 1,2,3; blocks 6,7,12,17.
   - References: S3/S5/S8; `src/server/settings/`, `src/server/meetings/projects.ts`, `src/app/[locale]/settings/`, `tests/integration/settings.test.ts`.
