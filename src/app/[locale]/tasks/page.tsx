@@ -1,5 +1,5 @@
-import { Dashboard } from "../../components/dashboard";
-import { requireOwner } from "../owner";
+import { TasksList } from "../../../components/tasks/list";
+import { requireOwner } from "../../owner";
 export default async function Page({
   params,
 }: {
@@ -7,5 +7,5 @@ export default async function Page({
 }) {
   const { locale } = await params;
   await requireOwner(locale);
-  return <Dashboard locale={locale} />;
+  return <TasksList locale={locale} />;
 }

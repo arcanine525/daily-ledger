@@ -10,6 +10,18 @@ export async function callApi(
   method = "GET",
   body?: unknown,
 ): Promise<unknown> {
+  return requestApi(path, { method, ...(body !== undefined ? { body } : {}) });
+}
+export async function requestApi(
+  path: string,
+  options: {
+    readonly method?: string;
+    readonly body?: unknown;
+    readonly key?: string;
+  },
+): Promise<unknown> {
+  const method = options.method ?? "GET",
+    body = options.body;
   let csrf = sessionStorage.getItem("ledger_csrf");
   if (method !== "GET" && !csrf) {
     const response = await fetch("/api/auth/session");
@@ -24,6 +36,7 @@ export async function callApi(
     headers: {
       "Content-Type": "application/json",
       ...(csrf ? { "x-csrf-token": csrf } : {}),
+      ...(options.key ? { "Idempotency-Key": options.key } : {}),
     },
     ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
   });

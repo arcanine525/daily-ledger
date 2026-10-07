@@ -1,5 +1,5 @@
-import { Dashboard } from "../../components/dashboard";
-import { requireOwner } from "../owner";
+import { MeetingEditor } from "../../../../components/meetings/editor";
+import { requireOwner } from "../../../owner";
 export default async function Page({
   params,
 }: {
@@ -7,5 +7,5 @@ export default async function Page({
 }) {
   const { locale } = await params;
   await requireOwner(locale);
-  return <Dashboard locale={locale} />;
+  return <MeetingEditor locale={locale} />;
 }

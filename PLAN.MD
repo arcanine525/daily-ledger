@@ -383,7 +383,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
   - Review QA (same command): single approval allows explicit status, bulk all TODO; no auto-undo endpoint; status event effectiveAt equals save time even for old report; new assignee mapping does not change old task; completed part of one assignee never auto-completes shared task; rejection fingerprint stable under rewording/unrelated updates.
   - Commit: Y | `feat(tasks): track confirmed work across meetings`.
 
-- [ ] 12. Meeting editor, progress, Todo và task management UI
+- [x] 12. Meeting editor, progress, Todo và task management UI
   - What: project participant UI, five-section summary, pending queue without status, safe bulk approval, manual task and same-project link/unlink, multi-assignee list/My, source-change/reconciliation banners. Separate meeting-date/deadline and overdue list-only filters; no dashboard overdue widget; paste/raw/version/progress flows retained.
   - Parallelization: Wave 3; depends 5,6,10,11; blocks 17,19.
   - References: S4/S5/S8; `src/app/[locale]/{meetings,tasks,projects}/`, `src/components/meetings/`, `tests/e2e/meetings-tasks.spec.ts`.

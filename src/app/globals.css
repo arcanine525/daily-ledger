@@ -1,9 +1,352 @@
 :root {
+  --surface: #fff;
+  --surface-soft: #f8f9fb;
+  --accent-soft: #edf2fe;
+  --danger-ink: #a0221b;
+  --danger-bg: #fdeeed;
+  --warn-bg: #fdf4e0;
   --ink: #16181d;
   --muted: #536070;
   --paper: #f2f3f5;
   --line: #d0d5dd;
   --accent: #2456f0;
+}
+.ledger-app {
+  height: 100dvh;
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+}
+.ledger-sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  gap: 24px;
+  min-height: 0;
+  overflow: auto;
+}
+.ledger-brand {
+  color: var(--ink);
+  font-weight: 750;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+.brand-mark {
+  border: 1px solid var(--ink);
+  border-radius: 6px;
+  padding: 4px;
+  font:
+    12px / 1.5 ui-monospace,
+    monospace;
+}
+.ledger-sidebar small {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+.ledger-sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: flex-start;
+}
+.ledger-sidebar nav a {
+  padding: 12px;
+  border-radius: 6px;
+  color: var(--muted);
+  text-decoration: none;
+}
+.ledger-sidebar nav a.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 650;
+}
+.ledger-sidebar p {
+  margin-top: auto;
+  font-size: 12px;
+  color: var(--muted);
+}
+.ledger-body {
+  display: grid;
+  grid-template-rows: 64px minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+}
+.ledger-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.ledger-content {
+  overflow: auto;
+  min-height: 0;
+  min-width: 0;
+}
+.workspace {
+  padding: 24px;
+  max-width: 1240px;
+  margin: auto;
+  font-size: 14px;
+}
+.workspace h1 {
+  font-size: 28px;
+  margin: 8px 0;
+}
+.workspace h2 {
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+.workspace p {
+  margin: 12px 0;
+}
+.workspace .eyebrow {
+  margin: 0;
+  font-size: 11px;
+}
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 24px;
+  margin: 16px 0;
+}
+.page-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 0 0 24px;
+}
+.cluster {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--surface);
+  text-decoration: none;
+}
+.secondary {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+button {
+  min-height: 44px;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.split-grid,
+.diff-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: 16px;
+}
+.badge {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 12px;
+  color: var(--muted);
+  background: var(--surface-soft);
+}
+.notice {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface-soft);
+  font-size: 13px;
+}
+.danger {
+  color: var(--danger-ink);
+  background: var(--danger-bg);
+}
+.warning {
+  background: var(--warn-bg);
+}
+.muted,
+small {
+  color: var(--muted);
+}
+td small,
+.timeline small {
+  display: block;
+  font-size: 12px;
+}
+.table-wrap {
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+th,
+td {
+  padding: 16px 12px;
+  border-bottom: 1px solid var(--line);
+}
+th {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--surface-soft);
+}
+.empty {
+  padding: 40px 24px;
+  border: 1px dashed var(--line);
+  text-align: center;
+  color: var(--muted);
+}
+.transcript-input {
+  min-height: 320px;
+  font:
+    13px / 1.7 ui-monospace,
+    monospace;
+}
+pre,
+blockquote {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font:
+    13px / 1.7 ui-monospace,
+    monospace;
+  background: var(--surface-soft);
+  border-left: 3px solid var(--line);
+  padding: 16px;
+  margin: 16px 0;
+}
+dialog {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  max-width: min(760px, calc(100vw - 32px));
+  max-height: 90dvh;
+  padding: 24px;
+  overflow: auto;
+}
+dialog::backdrop {
+  background: rgb(22 24 29 / 0.35);
+}
+dialog .page-heading {
+  margin-bottom: 16px;
+}
+.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+fieldset {
+  border: 1px solid var(--line);
+  padding: 16px;
+  margin: 16px 0;
+}
+progress {
+  width: 100%;
+  height: 12px;
+  accent-color: var(--accent);
+}
+summary {
+  cursor: pointer;
+  min-height: 44px;
+  padding: 8px 0;
+}
+.tabs {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 24px 0;
+}
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.stack .panel {
+  margin: 0;
+}
+.workspace article {
+  padding: 16px 0;
+}
+.timeline {
+  padding-left: 24px;
+}
+@media (max-width: 768px) {
+  .ledger-app {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .ledger-sidebar {
+    padding: 12px 16px;
+    gap: 8px;
+    overflow: visible;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .ledger-sidebar nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+  .ledger-sidebar nav a {
+    padding: 8px;
+    font-size: 12px;
+  }
+  .ledger-sidebar small,
+  .ledger-sidebar p {
+    display: none;
+  }
+  .ledger-body {
+    grid-template-rows: 48px minmax(0, 1fr);
+  }
+  .workspace {
+    padding: 16px;
+  }
+  .split-grid,
+  .diff-grid {
+    grid-template-columns: 1fr;
+  }
+  .panel {
+    padding: 16px;
+  }
+  .ledger-content {
+    overflow-x: hidden;
+  }
+  .shell {
+    padding: 24px 16px;
+  }
+  .ledger-header {
+    padding: 0 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto;
+  }
 }
 * {
   box-sizing: border-box;

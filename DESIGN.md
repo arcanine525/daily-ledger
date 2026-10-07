@@ -1,5 +1,19 @@
 # DESIGN.md — Wireframe design system (scoped to `wireframe.html` ONLY)
 
+## Phase 3 product UI contract
+
+The existing wireframe is the layout reference, adapted to real data and accessibility.
+Product UI uses its grayscale/blue tokens, 232px sidebar, compact header, 24px content
+padding, 1px panel borders and system fonts. No PLAN notes or flow-map controls ship.
+Application main owns vertical scroll within a 100dvh shell; sidebar/header remain fixed.
+At768px the sidebar becomes a wrapping navigation bar and panels stack; data tables own
+horizontal scrolling only. Buttons have44px minimum targets, focus rings and disabled
+busy states. Shared primitives: app-frame, page-heading, panel, cluster, table-wrap,
+badge, notice, tabs, source dialog, approval dialog, progress and empty/error state.
+Forms/dialogs use visible labels; raw transcript renders as escaped text, never HTML.
+Primary journeys: save raw → map speakers → bounded analysis → review → canonical task.
+Task filters and review state are distinct from task business status. No overdue dashboard.
+
 ## Phase 1 application foundation contract
 
 The initial Next.js foundation reuses the wireframe's ink #16181d, paper #f2f3f5,

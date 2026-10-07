@@ -12,7 +12,7 @@ test("visitors can view the bilingual foundation", async ({ page }) => {
   await page.getByRole("link", { name: "English", exact: true }).click();
   await expect(page).toHaveURL(/\/en$/);
   await expect(
-    page.getByRole("heading", { name: "A record of work, not just words." }),
+    page.getByRole("heading", { name: "Your daily work, remembered." }),
   ).toBeVisible();
 });
 test("unsupported locales are rejected", async ({ request }) => {
