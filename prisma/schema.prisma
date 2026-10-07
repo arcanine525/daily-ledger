@@ -39,6 +39,7 @@ enum ProposalKind {
 }
 
 model Owner {
+  requests      RequestRecord[]
   id            String            @id @default(uuid()) @db.Uuid
   singleton     Int               @unique @default(1)
   email         String            @unique
@@ -50,6 +51,16 @@ model Owner {
   projects      Project[]
   providers     ProviderProfile[]
   conversations Conversation[]
+}
+
+model RequestRecord {
+  ownerId   String @db.Uuid
+  key       String
+  bodyHash  String
+  meetingId String @db.Uuid
+  owner     Owner  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@id([ownerId, key])
 }
 
 model Session {

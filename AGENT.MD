@@ -9,7 +9,7 @@
 - Use descriptive Conventional Commit messages. Inspect status, diff and recent history before staging; stage explicit intended paths only.
 - Push normally to the configured remote. Never force-push, rewrite history, amend, bypass hooks or commit secrets.
 - If push fails, resolve authentication/network issues or report the blocker; do not start the next task with an unpushed completed task.
-- User authorized the initial documentation baseline commit and push, then Phase 1 tasks 1–5. Do not proceed to Phase 2 without a new instruction.
+- User authorized the baseline and Phase 1 tasks 1–5, then said "Tiếp tục" to authorize Phase 2 tasks 6–10. Stop after Phase 2; do not proceed to Phase 3 without a new instruction.
 
 ## Quality and scope
 
@@ -20,6 +20,7 @@
 - Keep `PLAN.MD` and `.omo/plans/plan.md` synchronized when changing requirements; `.omo/` is local tooling, not a committed product artifact.
 - Wireframe is design evidence only. Do not reuse its simulated auth or state as production code.
 - Never commit `.env`, real transcripts, tokens, keys, database dumps or local agent/browser artifacts.
+- Generate future Prisma migrations with `--create-only` and inspect SQL before deploy. Raw SQL owns generated FTS columns, GIN indexes, evidence foreign keys and invariant triggers; Prisma diff must not remove or alter them accidentally. Never reset databases to resolve migration drift.
 
 ## Handoff
 

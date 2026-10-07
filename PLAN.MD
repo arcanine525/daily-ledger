@@ -331,7 +331,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
   - QA happy: save aliases, separate profile slots and switch locale; failure: second device timezone cannot silently overwrite, invalid IANA or missing profile rejected, archived project cannot accept new meeting. Evidence `.omo/evidence/task-5-plan.txt`.
   - Commit: Y | `feat(settings): add projects identity and bilingual preferences`.
 
-- [ ] 6. Raw-first transcript ingestion và immutable revisions
+- [x] 6. Raw-first transcript ingestion và immutable revisions
   - What: S4 steps1–4, byte/char limits, parser offsets, speaker overrides, idempotent save, revision picker API. Read source source-of-truth, preserve whitespace/newlines.
   - Parallelization: Wave 2; depends 2,3,5; blocks 7,8,10,12,13,15.
   - References: S3–S5/S10; `src/server/meetings/`, `src/app/api/meetings/`, `tests/integration/transcripts.test.ts`, English 2-hour fixture.

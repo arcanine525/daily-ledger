@@ -31,8 +31,9 @@ test("owner can configure identity provider and project through the UI", async (
   await expect(
     page.getByRole("heading", { name: "Browser Project", exact: true }),
   ).toBeVisible();
-  await page.getByLabel("Tên người tham gia", { exact: true }).fill("Alex");
-  await page.getByRole("button", { name: "Thêm người", exact: true }).click();
+  const projectPanel = page.getByRole("article").filter({ has: page.getByRole("heading", { name: "Browser Project", exact: true }) });
+  await projectPanel.getByLabel("Tên người tham gia", { exact: true }).fill("Alex");
+  await projectPanel.getByRole("button", { name: "Thêm người", exact: true }).click();
   await expect(page.getByText("Alex", { exact: false }).first()).toBeVisible();
   await page.setViewportSize({ width: 390, height: 844 });
   expect(
