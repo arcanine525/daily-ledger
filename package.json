@@ -8,6 +8,8 @@
     "node": ">=22.18 <23"
   },
   "scripts": {
+    "admin:create-owner": "node --experimental-strip-types scripts/admin.mjs create",
+    "admin:reset-password": "node --experimental-strip-types scripts/admin.mjs reset",
     "dev": "next dev --hostname 127.0.0.1",
     "build": "next build",
     "start": "next start --hostname 127.0.0.1",

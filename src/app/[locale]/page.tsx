@@ -1,5 +1,7 @@
+import { cookies } from "next/headers";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { authenticate, HttpError } from "../../server/auth/session";
 
 export default async function Workspace({
   params,
@@ -8,6 +10,18 @@ export default async function Workspace({
 }) {
   const { locale } = await params;
   if (locale !== "vi" && locale !== "en") notFound();
+  try {
+    const jar = await cookies();
+    await authenticate(
+      new Request("http://localhost/session", {
+        headers: { cookie: jar.toString() },
+      }),
+    );
+  } catch (error) {
+    if (error instanceof HttpError && error.status === 401)
+      redirect(`/${locale}/login`);
+    throw error;
+  }
   const english = locale === "en";
   return (
     <main className="shell">

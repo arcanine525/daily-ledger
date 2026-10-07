@@ -7,6 +7,19 @@ Lưu transcript cuộc họp daily, trích xuất công việc và tra cứu l�
 Dự án có **kế hoạch triển khai, wireframe và nền tảng Next.js (Task 1)**.
 Đăng nhập, database nghiệp vụ và phân tích AI đang được triển khai theo Phase 1–2.
 
+Task 3 đã bổ sung session cá nhân và form đăng nhập. Chép `.env.example` thành
+`.env`, tạo key mã hóa ngẫu nhiên theo hướng dẫn trong file rồi chạy:
+
+```bash
+pnpm admin:create-owner
+pnpm dev
+# Khi cần khôi phục (sẽ thu hồi mọi session):
+pnpm admin:reset-password
+```
+
+CLI dùng `DIRECT_URL`, nhập mật khẩu ẩn (ít nhất 12 ký tự), không nhận password
+qua argv. Login ở `/vi/login`; test account chỉ được tạo trong DB test.
+
 Wireframe sử dụng dữ liệu mô phỏng trong trình duyệt, không kết nối AI hoặc DB.
 Không nhập transcript nhạy cảm, mật khẩu hay API token thật vào bản demo.
 

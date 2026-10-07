@@ -306,7 +306,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
   - QA happy: empty DB migrate then seed relations; failure: duplicate owner, duplicate step and second active run rejected, deleting revision cannot leave dangling citation. Evidence `.omo/evidence/task-2-plan.txt`.
   - Commit: Y | `feat(db): model versioned meetings tasks and runs`.
 
-- [ ] 3. Single-owner login, session, CSRF và operator recovery
+- [x] 3. Single-owner login, session, CSRF và operator recovery
   - What: S8 auth endpoints/guards, DB rate limits, owner creation/reset CLI hidden prompt. No signup/recovery HTTP route. Session revoke after reset. API endpoints default-deny unauthenticated access.
   - Parallelization: Wave 1; depends 1,2; blocks 5,6,8,14–18.
   - References: S8/S10; `src/server/auth/`, `src/app/api/auth/`, `scripts/admin/`, `tests/integration/auth.test.ts`, `tests/e2e/login.spec.ts`.
