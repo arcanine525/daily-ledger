@@ -410,7 +410,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
   - QA happy: scoped question→verified citation; all-task question matches SQL count; failure: malicious transcript cannot mutate task, invented citation fails validation, no-match says insufficient evidence, expansion401 no silent fallback. Evidence `.omo/evidence/task-14-plan.txt`.
   - Commit: Y | `feat(chat): answer across history with verified sources`.
 
-- [ ] 15. Trash, lazy purge và deletion-safe dependent data
+- [x] 15. Trash, lazy purge và deletion-safe dependent data
   - What: S9 soft-delete/restore/hard purge with30-day clock and10-meeting batches, run invalidation and source tombstones. Preserve history body/citation text, revoke direct/transitive context eligibility without deleting chat. Only authenticated visit/user POST, no scheduler.
   - Parallelization: Wave 3; depends 2,6,8,10,11,14; blocks 16,19.
   - References: S9/S10; `src/server/retention/`, `src/app/api/maintenance/`, `tests/integration/retention.test.ts`.

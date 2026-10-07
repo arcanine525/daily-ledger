@@ -4,9 +4,11 @@ Lưu transcript cuộc họp daily, trích xuất công việc và tra cứu l�
 
 ## Trạng thái dự án
 
-Dự án đã có **Phase 1–2 (Tasks 1–10)**: nền tảng Next.js, đăng nhập/settings và
-backend/API lưu transcript, phiên bản, checkpoint, native AI adapters và pipeline
-phân tích. Giao diện cuộc họp/duyệt task đầy đủ và chat thuộc Phase 3–4, chưa triển khai.
+Dự án đã có **Phase 1–3 (Tasks 1–15)**: nền tảng Next.js, đăng nhập/settings,
+lưu transcript và phiên bản, phân tích có checkpoint, quản lý/duyệt task,
+giao diện cuộc họp/công việc, PostgreSQL lexical search, chat backend có dẫn chứng
+và trash/restore/purge an toàn. **Chat UI và giao diện thùng rác đầy đủ thuộc
+Phase 4, chưa triển khai.** Xem `docs/phase-3.md` cho API và bằng chứng kiểm chứng.
 
 Task 3 đã bổ sung session cá nhân và form đăng nhập. Chép `.env.example` thành
 `.env`, tạo key mã hóa ngẫu nhiên theo hướng dẫn trong file rồi chạy:
@@ -94,7 +96,7 @@ Playwright hiện dùng Chrome đã cài trên máy. Integration suite dùng Pos
 
 Sau đăng nhập, mở `/vi/settings` hoặc `/en/settings` để lưu tên/aliases, ngôn ngữ,
 múi giờ, các provider, dự án và người tham gia. Giao diện Phase 1 là foundation;
-layout sản phẩm đầy đủ theo wireframe thuộc các task UI tiếp theo.
+layout cuộc họp, hộp chờ duyệt và công việc đã có trong Phase 3.
 
 ### PostgreSQL local và test (Task 2)
 
@@ -121,7 +123,8 @@ kiểm thử tự động chỉ dùng fixtures, chưa đánh giá chất lượn
 | --- | --- |
 | [`PLAN.MD`](PLAN.MD) | Yêu cầu, 28 quyết định đã duyệt, 20 task triển khai và 4 task kiểm chứng cuối |
 | [`WIREFRAME-FLOWS.md`](WIREFRAME-FLOWS.md) | Danh mục 21 màn hình, các luồng và nhánh trạng thái của wireframe |
-| [`DESIGN.md`](DESIGN.md) | Quy ước thiết kế chỉ dành cho wireframe, chưa phải design system production |
+| [`DESIGN.md`](DESIGN.md) | Quy ước wireframe và contract giao diện ứng dụng Phase 1/3 |
+| [`docs/phase-3.md`](docs/phase-3.md) | Tasks 11–15, API chat/retention, kết quả kiểm chứng và giới hạn |
 | [`wireframe.html`](wireframe.html) | Prototype HTML độc lập, không dependencies bên ngoài |
 
 ## Giới hạn và bảo mật
@@ -155,5 +158,17 @@ Test E2E dùng server fixture local ở3201 với `AI_DEV_ALLOWED_ORIGINS` exact
 ngoại lệ này bị vô hiệu hóa khi có biến VERCEL. Không bật allowlist test trên cloud.
 Xem `docs/phase-2.md` cho phạm vi và bằng chứng kiểm chứng.
 
-Tiếp theo là Task 11: canonical tasks và confirmation workflow. Chưa bắt đầu
-Phase 3. Quy tắc mỗi task một commit + push nằm trong `AGENT.MD`.
+Phase 3 đã hoàn thành Tasks 11–15. Bước tiếp theo, khi được yêu cầu, là Phase 4
+Task 16: Chat UI với filters, streaming, citations và resume. Quy tắc mỗi task
+một commit + push nằm trong `AGENT.MD`.
+
+### Retention đã triển khai
+
+Trash loại nguồn khỏi search/context ngay và hủy run phụ thuộc. Có thể restore
+trong 30 ngày. Sau đăng nhập/app load, trình duyệt gọi API bảo trì có auth/CSRF,
+mỗi request xóa tối đa 10 cuộc họp quá hạn và tiếp tục khi trang còn mở.
+Không có worker/cron; nếu không truy cập, dữ liệu quá hạn có thể còn trong DB.
+
+Purge giữ task đã xác nhận và body/quote/label của lịch sử chat, nhưng loại nguồn
+khỏi ngữ cảnh mới, kể cả phụ thuộc gián tiếp. Vì vậy purge **không xóa sạch mọi
+trích đoạn đã xuất hiện trong chat**, backup hoặc dữ liệu provider AI đã nhận.

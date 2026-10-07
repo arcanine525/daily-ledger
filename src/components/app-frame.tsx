@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { VisitMaintenance } from "./visit-maintenance";
 
 export function AppFrame({
   locale,
@@ -68,7 +69,10 @@ export function AppFrame({
             </Link>
           </div>
         </header>
-        <div className="ledger-content">{children}</div>
+        <div className="ledger-content">
+          <VisitMaintenance locale={locale} />
+          {children}
+        </div>
       </div>
     </div>
   );

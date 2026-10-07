@@ -12,7 +12,11 @@ export async function GET(
         id: run.id,
         state: run.state,
         snapshot: run.snapshot,
-        steps: run.steps,
+        steps: run.steps.map((step) => ({
+          stepKey: step.stepKey,
+          state: step.state,
+          attempt: step.attempt,
+        })),
         leaseUntil: run.leaseUntil,
       },
       { headers: { "Cache-Control": "no-store" } },

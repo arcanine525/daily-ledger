@@ -125,6 +125,7 @@ export async function executeChatStep(
       return {
         replayed: false,
         ...(await completeChat(claim, { ...context, batches }, async (tx) => {
+          await validateSources(tx, input.ownerId, context.sources);
           if (maps.length) {
             await tx.chatRun.update({
               where: { id: run.id },

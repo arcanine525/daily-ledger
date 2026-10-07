@@ -65,9 +65,11 @@ export async function createMeeting(
     if (previous) {
       if (previous.bodyHash !== bodyHash)
         throw new HttpError(409, "IDEMPOTENCY_CONFLICT");
-      return db.meeting.findUniqueOrThrow({
+      const saved = await db.meeting.findUnique({
         where: { id: previous.meetingId },
       });
+      if (!saved) throw new HttpError(410, "MEETING_PURGED");
+      return saved;
     }
     const project = await db.project.findFirst({
       where: { id: data.projectId, ownerId },
