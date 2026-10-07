@@ -9,7 +9,7 @@
 - Use descriptive Conventional Commit messages. Inspect status, diff and recent history before staging; stage explicit intended paths only.
 - Push normally to the configured remote. Never force-push, rewrite history, amend, bypass hooks or commit secrets.
 - If push fails, resolve authentication/network issues or report the blocker; do not start the next task with an unpushed completed task.
-- User authorized the baseline and Phase 1 tasks 1–5, then said "Tiếp tục" to authorize Phase 2 tasks 6–10. Stop after Phase 2; do not proceed to Phase 3 without a new instruction.
+- User authorized Phase 1 and Phase 2, then explicitly requested Phase 3 tasks 11–15. Stop after Phase 3; do not proceed to Phase 4 without a new instruction.
 
 ## Quality and scope
 

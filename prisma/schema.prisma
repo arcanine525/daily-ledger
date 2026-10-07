@@ -294,6 +294,7 @@ model TodoOccurrence {
 }
 
 model MeetingAction {
+  evidence         TaskEvidence[]
   retainedMissing  Boolean                   @default(false)
   id               String                    @id @default(uuid()) @db.Uuid
   meetingId        String                    @db.Uuid
@@ -340,6 +341,7 @@ model Task {
 }
 
 model TaskAssignment {
+  isSelfSnapshot Boolean            @default(false)
   taskId         String             @db.Uuid
   participantId  String             @db.Uuid
   nameSnapshot   String
@@ -351,6 +353,8 @@ model TaskAssignment {
 }
 
 model TaskEvent {
+  idempotencyKey   String?    @unique
+  inputHash        String?
   id               String     @id @default(uuid()) @db.Uuid
   taskId           String     @db.Uuid
   kind             String
@@ -365,14 +369,18 @@ model TaskEvent {
 }
 
 model TaskEvidence {
-  id               String  @id @default(uuid()) @db.Uuid
-  taskId           String  @db.Uuid
-  sourceMeetingId  String? @db.Uuid
-  sourceRevisionId String? @db.Uuid
+  actionId         String?        @db.Uuid
+  action           MeetingAction? @relation(fields: [actionId], references: [id], onDelete: SetNull)
+  startOffset      Int?
+  endOffset        Int?
+  id               String         @id @default(uuid()) @db.Uuid
+  taskId           String         @db.Uuid
+  sourceMeetingId  String?        @db.Uuid
+  sourceRevisionId String?        @db.Uuid
   quote            String?
-  sourceChanged    Boolean @default(false)
-  sourceDeleted    Boolean @default(false)
-  task             Task    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  sourceChanged    Boolean        @default(false)
+  sourceDeleted    Boolean        @default(false)
+  task             Task           @relation(fields: [taskId], references: [id], onDelete: Cascade)
 }
 
 model TaskProposal {

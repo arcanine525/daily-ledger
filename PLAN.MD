@@ -374,7 +374,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
   - QA happy: pause/resume multi-chunk analysis→summary and grounded actions; failure: step3 returns429 then explicit retry reuses steps1–2; v2 edit/trash before finish blocks v1 publish; invalid JSON leaves raw intact. Evidence `.omo/evidence/task-10-plan.txt`.
   - Commit: Y | `feat(analysis): publish versioned grounded meeting results`.
 
-- [ ] 11. Canonical tasks và confirmation workflow
+- [x] 11. Canonical tasks và confirmation workflow
   - What: S5 CREATE/LINK/UPDATE and immutable decisions; bulk-safe CREATE transaction, manual task/link/unlink, multi-assignees with one shared status, optional assignees/date, per-field proposal invalidation, app-time history/no-backdate, old-source guard. No automatic undo or unapproved status changes.
   - Parallelization: Wave 3; depends 2,7,10; blocks 12–15.
   - References: S3–S5; `src/server/tasks/`, `src/app/api/task-proposals/`, `tests/integration/tasks.test.ts`.

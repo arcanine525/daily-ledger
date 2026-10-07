@@ -6,6 +6,10 @@ export default async function teardown() {
   });
   await db.connect();
   await db.query(
+    'DELETE FROM "Task" WHERE "projectId" IN (SELECT id FROM "Project" WHERE "ownerId" IN (SELECT id FROM "Owner" WHERE email=$1))',
+    ["browser@example.test"],
+  );
+  await db.query(
     'DELETE FROM "Meeting" WHERE "projectId" IN (SELECT id FROM "Project" WHERE "ownerId" IN (SELECT id FROM "Owner" WHERE email=$1))',
     ["browser@example.test"],
   );
