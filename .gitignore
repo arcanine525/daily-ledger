@@ -1,0 +1,66 @@
+# Operating system / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Local agent tooling and browser evidence
+.codegraph
+.omo/
+.playwright-mcp/
+
+# Dependencies / build output (future Next.js application)
+node_modules/
+.next/
+out/
+dist/
+build/
+.turbo/
+.vercel/
+*.tsbuildinfo
+/src/generated/prisma/
+/generated/prisma/
+
+# Test / coverage / temporary output
+coverage/
+playwright-report/
+test-results/
+blob-report/
+*.log
+tmp/
+temp/
+.cache/
+
+# Environment and local credentials; keep sanitized example files trackable
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+
+# Local data, real transcripts and database backups
+/data/
+/transcripts/
+/backups/
+/postgres-data/
+*.dump
+*.backup
+*.sqlite
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+
+# Local Compose overrides; shared compose files remain trackable
+compose.override.yaml
+compose.override.yml
+docker-compose.override.yaml
+docker-compose.override.yml
