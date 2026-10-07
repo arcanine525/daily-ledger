@@ -1,4 +1,4 @@
-import { expect, it } from "vitest";
+import { expect, it, vi } from "vitest";
 import { database } from "../../src/server/db/client";
 import { openToken, sealToken } from "../../src/server/providers/crypto";
 import {
@@ -52,6 +52,21 @@ it("rejects credentials redirects targets and insecure production URLs", () => {
     "https://example.com?secret=test",
   ])
     expect(() => validateUrl(url)).toThrow();
+});
+
+it("permits only exact operator-allowed local origins and disables them on Vercel", () => {
+  vi.stubEnv("AI_DEV_ALLOWED_ORIGINS", "http://127.0.0.1:3201");
+  vi.stubEnv("VERCEL", "");
+  try {
+    expect(validateUrl("http://127.0.0.1:3201/v1").origin).toBe(
+      "http://127.0.0.1:3201",
+    );
+    expect(() => validateUrl("http://127.0.0.1:3202/v1")).toThrow();
+    vi.stubEnv("VERCEL", "1");
+    expect(() => validateUrl("http://127.0.0.1:3201/v1")).toThrow();
+  } finally {
+    vi.unstubAllEnvs();
+  }
 });
 
 it("persists only authenticated ciphertext and never returns a token", async () => {

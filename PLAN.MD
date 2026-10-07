@@ -365,7 +365,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
   - QA happy: three fixture providers normalize structured output and stream; failure:401/429/timeout/malformed response/unsupported schema surfaced, no second provider request, no token in error. Evidence `.omo/evidence/task-9-plan.txt`.
   - Commit: Y | `feat(ai): implement native provider protocol adapters`.
 
-- [ ] 10. End-to-end analysis map/reduce và atomic publish
+- [x] 10. End-to-end analysis map/reduce và atomic publish
   - What: connect6–9; five-section summary, chunk/reduce/match, participant snapshots; publish logical actions/occurrences/proposals theo S4.12–14. Reanalysis retains edited/approved actions once, replaces only unreviewed untouched items; reject suppression and uncertain-duplicate reconciliation; no silent partial publish.
   - Parallelization: Wave 2; depends 4,6,7,8,9; blocks 11–15.
   - References: S3–S6/S10; `src/server/analysis/pipeline/`, `src/app/api/analysis-runs/`, `tests/integration/analysis-pipeline.test.ts`.

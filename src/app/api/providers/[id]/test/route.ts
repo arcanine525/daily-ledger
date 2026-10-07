@@ -32,7 +32,7 @@ export async function POST(
       {
         schema: z.object({ ok: z.boolean() }),
         system: "Return an object with ok=true.",
-        user: "Connection test.",
+        user: JSON.stringify({ phase: "ping" }),
       },
     );
     return Response.json(

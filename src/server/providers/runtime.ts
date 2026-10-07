@@ -33,6 +33,7 @@ export async function runtimeProvider(
     throw new HttpError(409, "INVALID_ENCRYPTED_CREDENTIAL");
   }
   return {
+    contextBudget: revision.contextBudget,
     type: z
       .enum(["openai-compatible", "anthropic", "gemini"])
       .parse(revision.profile.type),

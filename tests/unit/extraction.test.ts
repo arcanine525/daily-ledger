@@ -16,6 +16,12 @@ it("pins exact Unicode quotes and rejects fabricated or ambiguous text", () => {
   expect(raw.slice(span.start, span.end)).toBe("😀 Review API.");
   expect(() => evidenceSpan(raw, "Invented")).toThrow();
   expect(() => evidenceSpan(raw, "Review API.")).toThrow();
+  expect(
+    evidenceSpan(raw, "Review API.", {
+      start: raw.indexOf("Alex:"),
+      end: raw.length,
+    }).start,
+  ).toBe(raw.lastIndexOf("Review API."));
 });
 it("leaves shared-speaker work unresolved unless the quote names the assignee", () => {
   const participants = [
@@ -29,6 +35,28 @@ it("leaves shared-speaker work unresolved unless the quote names the assignee", 
       quote: "I will do it",
     }),
   ).toEqual([]);
+  expect(
+    resolveAssignees({
+      names: ["Mai"],
+      participants,
+      sharedSpeaker: true,
+      quote: "Mai: I will do it",
+    }),
+  ).toEqual([]);
+  const duplicate = [
+    ...participants,
+    { id: "other", displayName: "Mai", aliases: ["Mai"], isSelf: false },
+  ];
+  expect(
+    resolveAssignees({
+      names: ["Mai"],
+      participants: duplicate,
+      sharedSpeaker: false,
+      speaker: "Mai",
+      speakerParticipantId: "mai",
+      quote: "Mai: I will do it",
+    }).map((person) => person.id),
+  ).toEqual(["mai"]);
   expect(
     resolveAssignees({
       names: ["Mai"],
@@ -76,6 +104,7 @@ it("keeps completion reports out of new-task creation and requires whole-task co
     names: ["Mai"],
     duePhrase: null,
     completionScope: "PARTIAL",
+    segmentOrdinal: null,
   } as const;
   expect(canComplete({ ...report, names: [...report.names] }, true)).toBe(
     false,

@@ -3,6 +3,7 @@ import { HttpError } from "../auth/session";
 
 export type ProviderType = "openai-compatible" | "anthropic" | "gemini";
 export type Provider = {
+  readonly contextBudget?: number;
   readonly type: ProviderType;
   readonly baseUrl: string;
   readonly model: string;
@@ -23,14 +24,11 @@ export type ProviderResponse = {
 export type Transport = (request: ProviderRequest) => Promise<ProviderResponse>;
 export type StructuredPrompt<T> = Prompt & { readonly schema: z.ZodType<T> };
 export class ProviderError extends HttpError {
-  readonly retryAfterSeconds: number;
-  constructor(
-    code: string,
-    readonly retryable: boolean,
-    retryAfterSeconds = 0,
-  ) {
-    super(502, code);
-    this.retryAfterSeconds = Math.min(900, Math.max(0, retryAfterSeconds));
+  constructor(code: string, retryable: boolean, retryAfterSeconds = 0) {
+    super(502, code, {
+      retryable,
+      retryAfterSeconds: Math.min(900, Math.max(0, retryAfterSeconds)),
+    });
   }
 }
 export function checkResponse(status: number, headers?: Headers) {

@@ -26,6 +26,13 @@ export async function meetingForOwner(ownerId: string, id: string) {
       revisions: { orderBy: { number: "desc" } },
       identity: true,
       analyses: { orderBy: { number: "desc" } },
+      actions: {
+        where: { reviewState: { not: "SUPERSEDED" } },
+        include: {
+          proposals: { where: { state: "PENDING" } },
+          occurrences: { include: { occurrence: true } },
+        },
+      },
     },
   });
   if (!meeting) throw new HttpError(404, "MEETING_NOT_FOUND");

@@ -13,6 +13,7 @@ export const itemSchema = z.object({
   kind: z.enum(["ACTION", "UPDATE", "COMPLETION_REPORT"]),
   title: z.string().trim().min(1),
   quote: z.string().min(1),
+  segmentOrdinal: z.number().int().nonnegative().nullable(),
   names: z.array(z.string()),
   duePhrase: z.string().nullable(),
   completionScope: z.enum(["ALL", "PARTIAL", "NONE"]),

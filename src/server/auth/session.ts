@@ -9,11 +9,20 @@ import { parseEnvironment } from "../env";
 import { verifyPassword } from "./password";
 
 export class HttpError extends Error {
+  readonly retryAfterSeconds: number;
+  readonly retryable: boolean;
   constructor(
     readonly status: number,
     readonly code: string,
+    details: {
+      readonly retryAfterSeconds?: number;
+      readonly retryable?: boolean;
+    } = {},
   ) {
     super(code);
+    this.retryAfterSeconds =
+      details.retryAfterSeconds ?? (status === 429 ? 900 : 0);
+    this.retryable = details.retryable ?? status >= 500;
   }
 }
 export function tokenHash(value: string) {
@@ -75,7 +84,15 @@ export async function limit(key: string, maximum: number, durationMs: number) {
     "expiresAt"=CASE WHEN "RateLimitBucket"."expiresAt" <= ${now} THEN ${expires} ELSE "RateLimitBucket"."expiresAt" END
     RETURNING count,"expiresAt"`;
   if ((rows[0]?.count ?? maximum + 1) > maximum)
-    throw new HttpError(429, "RATE_LIMITED");
+    throw new HttpError(429, "RATE_LIMITED", {
+      retryAfterSeconds: Math.max(
+        1,
+        Math.ceil(
+          ((rows[0]?.expiresAt.getTime() ?? Date.now() + 900000) - Date.now()) /
+            1000,
+        ),
+      ),
+    });
 }
 export async function login(input: {
   readonly email: string;
@@ -114,12 +131,22 @@ export async function respond(action: () => Promise<Response>) {
       return Response.json({ code: "INVALID_JSON" }, { status: 400 });
     if (error instanceof HttpError)
       return Response.json(
-        { code: error.code },
+        {
+          code: error.code,
+          messageKey: error.code,
+          retryable: error.retryable,
+          requestId: randomBytes(8).toString("hex"),
+          ...(error.retryAfterSeconds
+            ? { retryAfterSeconds: error.retryAfterSeconds }
+            : {}),
+        },
         {
           status: error.status,
           headers: {
             "Cache-Control": "no-store",
-            ...(error.status === 429 ? { "Retry-After": "900" } : {}),
+            ...(error.retryAfterSeconds
+              ? { "Retry-After": String(error.retryAfterSeconds) }
+              : {}),
           },
         },
       );

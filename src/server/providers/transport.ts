@@ -1,15 +1,26 @@
 import { lookup } from "node:dns/promises";
+import { request as httpRequest } from "node:http";
 import { request as httpsRequest } from "node:https";
 import ipaddr from "ipaddr.js";
 import { HttpError } from "../auth/session";
 import type { ProviderRequest } from "./protocol";
 
 type Address = { readonly address: string; readonly family: number };
+function localOriginAllowed(url: URL) {
+  return (
+    !process.env["VERCEL"] &&
+    (process.env["AI_DEV_ALLOWED_ORIGINS"] ?? "")
+      .split(",")
+      .map((value) => value.trim())
+      .includes(url.origin)
+  );
+}
 export function validateUrl(value: string) {
   const url = new URL(value);
   if (
-    url.protocol !== "https:" ||
-    (url.port && url.port !== "443") ||
+    (!localOriginAllowed(url) &&
+      (url.protocol !== "https:" || (url.port && url.port !== "443"))) ||
+    !["https:", "http:"].includes(url.protocol) ||
     url.username ||
     url.password ||
     url.search ||
@@ -34,12 +45,25 @@ export async function safeProviderStream(
     check = new URL(input.url);
   if (check.search === "?alt=sse") check.search = "";
   validateUrl(check.toString());
-  const address = publicAddresses(await lookup(url.hostname, { all: true }));
   const signal = input.signal
     ? AbortSignal.any([input.signal, AbortSignal.timeout(150000)])
     : AbortSignal.timeout(150000);
+  if (signal.aborted) throw new HttpError(504, "PROVIDER_TIMEOUT");
+  const addresses = await new Promise<{ address: string; family: number }[]>(
+    (resolve, reject) => {
+      const abort = () => reject(new HttpError(504, "PROVIDER_TIMEOUT"));
+      signal.addEventListener("abort", abort, { once: true });
+      lookup(url.hostname, { all: true })
+        .then(resolve, reject)
+        .finally(() => signal.removeEventListener("abort", abort));
+    },
+  );
+  const address = localOriginAllowed(url)
+    ? addresses[0]
+    : publicAddresses(addresses);
+  if (!address) throw new HttpError(422, "UNSAFE_PROVIDER_ADDRESS");
   return new Promise((resolve, reject) => {
-    const request = httpsRequest(
+    const request = (url.protocol === "http:" ? httpRequest : httpsRequest)(
       url,
       {
         method: "POST",

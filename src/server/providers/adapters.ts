@@ -81,10 +81,16 @@ export async function generateStructured<T>(
   transport: Transport = safeProviderRequest,
 ) {
   const jsonSchema = z.toJSONSchema(input.schema, { target: "draft-7" });
+  const request = buildRequest(provider, input, false, jsonSchema);
+  if (
+    provider.contextBudget &&
+    Buffer.byteLength(request.body) + 4096 > provider.contextBudget
+  )
+    throw new ProviderError("CONTEXT_BUDGET_EXCEEDED", false);
   let response: Awaited<ReturnType<Transport>>;
   try {
     response = await transport({
-      ...buildRequest(provider, input, false, jsonSchema),
+      ...request,
       signal: AbortSignal.timeout(150000),
     });
   } catch (error) {
@@ -93,11 +99,22 @@ export async function generateStructured<T>(
   }
   checkResponse(response.status, response.headers);
   try {
-    const text = responseText(provider.type, JSON.parse(response.body));
+    const body: unknown = JSON.parse(response.body);
+    const text = responseText(provider.type, body);
     const value = input.schema.safeParse(JSON.parse(text));
     if (!value.success)
       throw new ProviderError("INVALID_STRUCTURED_OUTPUT", false);
-    return { value: value.data, rawResponse: response.body };
+    const metadata = z
+      .object({
+        usage: z.json().optional(),
+        usageMetadata: z.json().optional(),
+      })
+      .parse(body);
+    return {
+      value: value.data,
+      rawResponse: response.body,
+      usage: metadata.usage ?? metadata.usageMetadata ?? null,
+    };
   } catch (error) {
     if (error instanceof ProviderError) throw error;
     throw new ProviderError("INVALID_PROVIDER_JSON", false);

@@ -4,9 +4,9 @@ Lưu transcript cuộc họp daily, trích xuất công việc và tra cứu l�
 
 ## Trạng thái dự án
 
-Dự án đã có **Phase 1 (Tasks 1–5)**: nền tảng Next.js, Prisma schema/migrations,
-đăng nhập, cấu hình provider và workspace. Transcript, phân tích AI, task và chat
-chưa được triển khai; thuộc Phase 2–4.
+Dự án đã có **Phase 1–2 (Tasks 1–10)**: nền tảng Next.js, đăng nhập/settings và
+backend/API lưu transcript, phiên bản, checkpoint, native AI adapters và pipeline
+phân tích. Giao diện cuộc họp/duyệt task đầy đủ và chat thuộc Phase 3–4, chưa triển khai.
 
 Task 3 đã bổ sung session cá nhân và form đăng nhập. Chép `.env.example` thành
 `.env`, tạo key mã hóa ngẫu nhiên theo hướng dẫn trong file rồi chạy:
@@ -134,5 +134,26 @@ kiểm thử tự động chỉ dùng fixtures, chưa đánh giá chất lượn
 
 ## Bước tiếp theo
 
-Tiếp theo là Task 6: nhập transcript và immutable revisions. Không bắt đầu Phase 2
-trừ khi có yêu cầu mới. Quy tắc mỗi task một commit + push nằm trong `AGENT.MD`.
+### API cuộc họp và phân tích (Phase 2)
+
+- `POST /api/meetings`: gửi projectId, title, occurredAt (UTC ISO), meetingTimezone,
+  rawText và header `Idempotency-Key`; raw được lưu trước khi gọi AI.
+- `GET /api/meetings`: trả `{ items, nextCursor }`; hỗ trợ cursor và projectId.
+- `GET /api/meetings/[id]`: xem raw revisions, analyses và actions/proposals hiện hành.
+- `POST /api/meetings/[id]/revisions`: rawText + expectedRevision, không ghi đè v1.
+- `POST /api/meetings/[id]/identity`: mapping speaker/participantIds/isSharedSpeaker.
+- `POST /api/meetings/[id]/analysis-runs`: tạo hoặc tham gia run đang hoạt động.
+- `GET /api/analysis-runs/[id]`: trạng thái/checkpoint metadata và thứ tự steps.
+- `POST /api/analysis-runs/[id]/step`: `{ stepKey }`, mỗi request xử lý một bước.
+- `POST /api/analysis-runs/[id]/cancel`: hủy run, vô hiệu hóa commit từ request cũ.
+
+Mutations cần cookie session, Origin đúng APP_ORIGIN và `x-csrf-token` (lấy từ
+login hoặc GET session). Không gửi token AI từ frontend. Client chỉ gọi bước kế
+tiếp khi đang mở; backend không có worker/cron tự hoàn tất khi đóng trang.
+
+Test E2E dùng server fixture local ở3201 với `AI_DEV_ALLOWED_ORIGINS` exact origin;
+ngoại lệ này bị vô hiệu hóa khi có biến VERCEL. Không bật allowlist test trên cloud.
+Xem `docs/phase-2.md` cho phạm vi và bằng chứng kiểm chứng.
+
+Tiếp theo là Task 11: canonical tasks và confirmation workflow. Chưa bắt đầu
+Phase 3. Quy tắc mỗi task một commit + push nằm trong `AGENT.MD`.
