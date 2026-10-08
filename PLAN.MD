@@ -418,7 +418,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
   - QA happy: trash excludes retrieval, history still readable with unavailable-source label; restore recomputes eligibility. Failure: purge during request prevents resurrection; raw/analysis/operational quote caches gone, approved task and chat body byte-identical; direct/indirect dependent messages excluded from next model request, independent later messages still eligible. Evidence `.omo/evidence/task-15-plan.txt`.
   - Commit: Y | `feat(retention): safely purge meetings on demand`.
 
-- [ ] 16. Chat UI với filters, streaming, citations và resume
+- [x] 16. Chat UI với filters, streaming, citations và resume
   - What: threads/history, independent date filters and clarification turn, two-group task replies, historical app/evidence split, progress/stream/citation; deleted-source badge leaves old answer readable, raw navigation disabled. No mutation affordances.
   - Parallelization: Wave 4; depends 14,15; blocks 17,19.
   - References: S7–S9; `src/app/[locale]/chat/`, `src/components/chat/`, `tests/e2e/chat.spec.ts`.

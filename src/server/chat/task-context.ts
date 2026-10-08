@@ -47,6 +47,7 @@ export async function taskContext(
   };
   const tasks = await db.task.findMany({
       where,
+      orderBy: [{ createdAt: "asc" }, { id: "asc" }],
       include: {
         assignments: true,
         events: { orderBy: [{ recordedAt: "desc" }, { id: "desc" }] },

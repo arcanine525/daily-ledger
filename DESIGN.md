@@ -14,6 +14,17 @@ Forms/dialogs use visible labels; raw transcript renders as escaped text, never 
 Primary journeys: save raw → map speakers → bounded analysis → review → canonical task.
 Task filters and review state are distinct from task business status. No overdue dashboard.
 
+## Phase 4 chat and lifecycle contract
+
+Chat extends the same token-driven panel, notice, badge, field and native-dialog primitives.
+Threads use a 240px column with a minmax(0,1fr) conversation pane; at768px they stack.
+Each pane owns its scroll, long IDs/quotes wrap, and controls retain44px targets.
+User/provider text is escaped plaintext: no HTML, Markdown images or external resource fetching.
+Provisional replies are labeled unverified until final commit; progress, pause/resume and errors
+are explicit. Task replies have separate confirmed/pending groups with independent totals and
+page controls, and historical app state is separate from meeting evidence. Deleted citations
+retain labels/quotes but cannot open raw. Purge requires an exact title and explains retained chat.
+
 ## Phase 1 application foundation contract
 
 The initial Next.js foundation reuses the wireframe's ink #16181d, paper #f2f3f5,

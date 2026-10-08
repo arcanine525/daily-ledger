@@ -7,8 +7,9 @@ Lưu transcript cuộc họp daily, trích xuất công việc và tra cứu l�
 Dự án đã có **Phase 1–3 (Tasks 1–15)**: nền tảng Next.js, đăng nhập/settings,
 lưu transcript và phiên bản, phân tích có checkpoint, quản lý/duyệt task,
 giao diện cuộc họp/công việc, PostgreSQL lexical search, chat backend có dẫn chứng
-và trash/restore/purge an toàn. **Chat UI và giao diện thùng rác đầy đủ thuộc
-Phase 4, chưa triển khai.** Xem `docs/phase-3.md` cho API và bằng chứng kiểm chứng.
+và trash/restore/purge an toàn. **Phase 4 Task16 đã bổ sung Chat UI** tại `/vi/chat`
+và `/en/chat`; giao diện thùng rác đầy đủ và Tasks17–20 còn lại đang triển khai.
+Xem `docs/phase-3.md` và `docs/phase-4.md` cho phạm vi và bằng chứng kiểm chứng.
 
 Task 3 đã bổ sung session cá nhân và form đăng nhập. Chép `.env.example` thành
 `.env`, tạo key mã hóa ngẫu nhiên theo hướng dẫn trong file rồi chạy:

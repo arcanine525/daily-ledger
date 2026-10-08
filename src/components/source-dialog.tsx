@@ -5,10 +5,12 @@ export function Modal({
   title,
   children,
   onClose,
+  locale = "vi",
 }: {
   readonly title: string;
   readonly children: ReactNode;
   readonly onClose: () => void;
+  readonly locale?: "vi" | "en";
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -22,9 +24,9 @@ export function Modal({
           className="secondary"
           type="button"
           onClick={() => dialog.current?.close()}
-          aria-label="Đóng"
+          aria-label={locale === "en" ? "Close" : "Đóng"}
         >
-          Đóng
+          {locale === "en" ? "Close" : "Đóng"}
         </button>
       </header>
       {children}

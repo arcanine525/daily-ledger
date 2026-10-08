@@ -19,6 +19,7 @@ export function AppFrame({
     ["meetings", en ? "Meetings" : "Cuộc họp"],
     ["pending", en ? "Review inbox" : "Hộp chờ duyệt"],
     ["tasks", en ? "Tasks" : "Công việc"],
+    ["chat", en ? "Chat" : "Trò chuyện"],
     ["projects", en ? "Projects" : "Dự án"],
     ["settings", en ? "Settings" : "Cài đặt"],
   ] as const;
