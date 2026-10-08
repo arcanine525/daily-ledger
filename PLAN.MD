@@ -450,7 +450,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
   - QA happy: 2-hour paste→resume→confirm→cross-day query→trash/restore across Compose; failure: process death, simultaneous accept, invalid secret, lease stale commit, prompt requesting deletion all fail safely. Evidence `.omo/evidence/task-19-plan/` logs+traces+row-count assertions.
   - Commit: Y | `test(system): cover recovery security and data lifecycle`.
 
-- [ ] 20. Runbook, deployment smoke và bàn giao vận hành
+- [x] 20. Runbook, deployment smoke và bàn giao vận hành
   - What: finish S11 docs, Q1–Q28 decision map and dependency versions; CLI ops tests on disposable DB, isolated preview only with credentials/authorization. Preview smoke uses public HTTPS deterministic mock fixture endpoint under test allowlist, never real model; no private-network bypass or production test mode. State blocked preview honestly and “Chưa đánh giá chất lượng AI thực tế” even if all mocks pass.
   - Parallelization: Wave 4; depends18,19; blocksF1–F4.
   - References: S1/S8/S9/S11; `README.md`, `docs/{runbook,dependencies,architecture}.md`, `scripts/smoke.ts`, `tests/integration/operations.test.ts`.

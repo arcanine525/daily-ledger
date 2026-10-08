@@ -86,4 +86,26 @@ Evidence: `.omo/evidence/task-19-plan/`. The historical null-result cause was no
 no speculative fallback was added. These results supersede the earlier failed full runs,
 but do not claim a fix to an unconfirmed library/resource issue or real-model quality.
 
-Task20 and F1–F4 remain pending.
+## Task 20: operator recovery and handoff
+
+Added runbook/dependency/architecture documents and Q1–Q28 ownership/regression mapping.
+Operator CLI now supports help and rejects extra password arguments before prompting.
+Disposable PostgreSQL operations tests verify hidden create/reset, session revocation,
+custom-format backup/restore with identical raw/hash and immutable triggers, wrong-key
+failure and runtime reconfiguration without ciphertext replacement. Those test databases
+are removed after the tests; ordinary local/test/deployment volumes are not reset.
+
+`pnpm verify` passed:18 unit,54 integration,20 HTTP/Chrome E2E tests, lint/typecheck/build
+passed. `pnpm smoke` is implemented with secret-environment login, explicit isolated-preview
+mutation authorization, HTTPS fixture-only provider, readiness/analysis/chat-citation checks.
+Missing prerequisites return BLOCKED/exit2. Local ops and that blocked CLI surface were executed.
+
+**Remote preview remains BLOCKED:** Vercel CLI authentication is available, but no isolated
+preview URL/DB/public HTTPS fixture configuration was supplied. No production migration,
+cloud deployment or paid/live-model test was performed. The valid remote smoke path is not
+claimed verified. Offline key rotation is documented as an operator-reviewed procedure;
+automatic or online multi-key rotation is not implemented.
+
+Tasks1–20 implementation/local handoff are recorded complete with this explicit conditional
+preview limitation. F1–F4 verdicts and the user's explicit acceptance remain pending; this
+document does not declare the entire project release complete.

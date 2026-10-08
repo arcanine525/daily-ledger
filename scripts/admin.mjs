@@ -5,11 +5,13 @@ import { Client } from "pg";
 import { randomUUID } from "node:crypto";
 import { hashPassword } from "../src/server/auth/password.ts";
 
+const args=process.argv.slice(2);
+if(args.includes("--help")){process.stdout.write("Usage: admin.mjs create|reset\nEmail and password are prompted; never pass a password as an argument.\n");process.exit(0);}
+const mode=args[0];
+if(args.length!==1||(mode!=="create"&&mode!=="reset")){process.stderr.write("Use create or reset; never pass a password as an argument.\n");process.exit(1);}
 let hidden = false;
 const output = new Writable({ write(chunk, _encoding, callback) { if (!hidden) process.stdout.write(chunk); callback(); } });
 const prompt = createInterface({ input: process.stdin, output, terminal: true });
-const mode = process.argv[2];
-if (mode !== "create" && mode !== "reset") throw new Error("Use create or reset; never pass a password as an argument");
 const email = (await prompt.question("Email: ")).trim().toLowerCase();
 process.stdout.write("Password (hidden): "); hidden = true;
 const password = await prompt.question(""); hidden = false;

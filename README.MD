@@ -11,7 +11,9 @@ và trash/restore/purge an toàn. **Phase 4 Task16 đã bổ sung Chat UI** tạ
 và `/en/chat`; **Task17 đã bổ sung giao diện thùng rác và kiểm chứng EN/VI,
 accessibility, responsive**. **Task18 có cấu hình Vercel và Docker standalone đã
 kiểm chứng trên stack test riêng.** **Task19 đã chạy whole-suite xanh hai lượt**,
-bao gồm recovery/concurrency/adversarial checks. Task20 và F1–F4 còn lại chưa hoàn tất.
+bao gồm recovery/concurrency/adversarial checks. **Task20 có runbook, kiểm thử vận hành
+và smoke command**; remote Preview smoke đang **BLOCKED** vì thiếu cấu hình test riêng.
+F1–F4 và xác nhận cuối của user còn lại chưa hoàn tất.
 Xem `docs/phase-3.md` và `docs/phase-4.md` cho phạm vi và bằng chứng kiểm chứng.
 
 Task 3 đã bổ sung session cá nhân và form đăng nhập. Chép `.env.example` thành
@@ -162,9 +164,10 @@ Test E2E dùng server fixture local ở3201 với `AI_DEV_ALLOWED_ORIGINS` exact
 ngoại lệ này bị vô hiệu hóa khi có biến VERCEL. Không bật allowlist test trên cloud.
 Xem `docs/phase-2.md` cho phạm vi và bằng chứng kiểm chứng.
 
-Phase 3 đã hoàn thành Tasks 11–15. Bước tiếp theo, khi được yêu cầu, là Phase 4
-Task 16: Chat UI với filters, streaming, citations và resume. Quy tắc mỗi task
-một commit + push nằm trong `AGENT.MD`.
+Tasks1–20 đã có implementation và kiểm chứng local theo từng task. Chưa tuyên bố
+release hoàn tất: còn remote Preview smoke và F1–F4/user acceptance. Xem
+`docs/phase-4.md`, `docs/deployment.md`, `docs/runbook.md`, `docs/dependencies.md`
+và `docs/architecture.md`. Quy tắc mỗi task một commit + push nằm trong `AGENT.MD`.
 
 ### Retention đã triển khai
 
