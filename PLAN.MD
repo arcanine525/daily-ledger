@@ -426,7 +426,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
   - QA happy: Vietnamese query→filtered citation; history before/after purge keeps same body with source-deleted badge. Failure: disconnect→incomplete/resume, deleted raw cannot open or enter next context, HTML/image payload not executed/fetched. Evidence `.omo/evidence/task-16-plan/` screenshots/trace.
   - Commit: Y | `feat(ui): add source-grounded bilingual chat`.
 
-- [ ] 17. Hoàn thiện EN/VI, accessibility và responsive states
+- [x] 17. Hoàn thiện EN/VI, accessibility và responsive states
   - What: complete translation keys across all pages/errors/dialogs, locale persistence, output locale distinct, keyboard/focus/contrast, no content clipping at 390/768/1440px. Apply same design system to trash/settings/auth.
   - Parallelization: Wave 4; depends 5,12,16; blocks 19.
   - References: S8, S7 language contract; `src/messages/`, `src/components/`, `tests/e2e/locale-accessibility.spec.ts`.

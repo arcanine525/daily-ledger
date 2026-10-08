@@ -5,6 +5,7 @@ import { requestApi } from "../api-client";
 import { projectsSchema } from "../settings-contracts";
 import { Modal } from "../source-dialog";
 import { useResource } from "../use-resource";
+import { useUiError } from "../use-ui-error";
 import type { Proposal } from "../workspace-schemas";
 import { taskList } from "../workspace-schemas";
 
@@ -30,7 +31,7 @@ export function ApprovalDialog({
     projects = useResource("/api/projects", projectsSchema),
     tasks = useResource(`/api/tasks?projectId=${action.projectId}`, taskList),
     key = useRef(crypto.randomUUID());
-  const [error, setError] = useState(""),
+  const [error, setError] = useUiError(),
     [busy, setBusy] = useState(false),
     [resolution, setResolution] = useState<"LINK_EXISTING" | "CREATE_SEPARATE">(
       "LINK_EXISTING",

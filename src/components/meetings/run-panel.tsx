@@ -2,6 +2,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { callApi } from "../api-client";
+import { runStateText } from "../ui-copy";
+import { useUiError } from "../use-ui-error";
 import type { Meeting } from "../workspace-schemas";
 import { runSchema } from "../workspace-schemas";
 
@@ -16,7 +18,7 @@ export function RunPanel({
 }) {
   const en = locale === "en",
     [run, setRun] = useState<z.infer<typeof runSchema> | null>(null),
-    [error, setError] = useState(""),
+    [error, setError] = useUiError(),
     [working, setWorking] = useState(false);
   const pause = useRef(false),
     mounted = useRef(true);
@@ -44,7 +46,7 @@ export function RunPanel({
       mounted.current = false;
       pause.current = true;
     };
-  }, [meeting.id, load]);
+  }, [meeting.id, load, setError]);
   async function start() {
     setError("");
     try {
@@ -102,7 +104,10 @@ export function RunPanel({
       <header className="page-heading">
         <h2>{en ? "Analysis" : "Phân tích AI"}</h2>
         <span className="badge">
-          {run?.state ?? (meeting.activeAnalysisId ? "COMPLETED" : "READY")}
+          {runStateText(
+            run?.state ?? (meeting.activeAnalysisId ? "COMPLETED" : "READY"),
+            locale,
+          )}
         </span>
       </header>
       <p className="notice">

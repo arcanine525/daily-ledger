@@ -4,6 +4,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { callApi } from "../api-client";
 import { useResource } from "../use-resource";
+import { useUiError } from "../use-ui-error";
 import { filtersSchema, threadsSchema } from "./contracts";
 import { ChatThread } from "./thread";
 import "./chat.css";
@@ -14,7 +15,7 @@ export function ChatWorkspace({ locale }: { readonly locale: "vi" | "en" }) {
     threads = useResource("/api/conversations", threadsSchema),
     id = search.get("conversation"),
     [title, setTitle] = useState(""),
-    [error, setError] = useState("");
+    [error, setError] = useUiError();
   function select(threadId: string) {
     const params = new URLSearchParams(search);
     params.set("conversation", threadId);

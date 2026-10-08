@@ -5,6 +5,7 @@ import { z } from "zod";
 import { requestApi } from "../api-client";
 import { projectsSchema } from "../settings-contracts";
 import { useResource } from "../use-resource";
+import { useUiError } from "../use-ui-error";
 import type { Task } from "../workspace-schemas";
 
 export function TaskForm({
@@ -19,7 +20,7 @@ export function TaskForm({
   const en = locale === "en",
     projects = useResource("/api/projects", projectsSchema),
     [project, setProject] = useState(task?.projectId ?? ""),
-    [error, setError] = useState(""),
+    [error, setError] = useUiError(),
     [busy, setBusy] = useState(false),
     key = useRef(crypto.randomUUID());
   const projectId = (project || projects.data?.[0]?.id) ?? "",

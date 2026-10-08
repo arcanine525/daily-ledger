@@ -8,6 +8,7 @@ import { meetingSchema } from "../workspace-schemas";
 import { RunPanel } from "./run-panel";
 import { SpeakerMapping } from "./speaker-mapping";
 import { MeetingTodos } from "./todos";
+import { MeetingTrashButton } from "./trash-button";
 import { SummaryView, TranscriptView, VersionsView } from "./views";
 
 export function MeetingDetail({
@@ -81,6 +82,7 @@ export function MeetingDetail({
         >
           {en ? "Edit transcript" : "Sửa transcript"}
         </button>
+        <MeetingTrashButton id={id} locale={locale} />
       </header>
       {resource.error && (
         <p role="alert" className="notice danger">

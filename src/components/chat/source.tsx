@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { z } from "zod";
 import { callApi } from "../api-client";
 import { Modal } from "../source-dialog";
+import { useUiError } from "../use-ui-error";
 import { sourceSchema } from "./contracts";
 export function ChatSource({
   id,
@@ -18,7 +19,7 @@ export function ChatSource({
   const [source, setSource] = useState<z.infer<typeof sourceSchema> | null>(
       null,
     ),
-    [error, setError] = useState(""),
+    [error, setError] = useUiError(),
     [loading, setLoading] = useState(false);
   async function open() {
     setLoading(true);

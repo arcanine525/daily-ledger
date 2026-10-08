@@ -1,7 +1,10 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
+import { useEffect } from "react";
+import { ClientError, callApi } from "./api-client";
+import { useUiError } from "./use-ui-error";
 import { VisitMaintenance } from "./visit-maintenance";
 
 export function AppFrame({
@@ -13,6 +16,36 @@ export function AppFrame({
 }) {
   const pathname = usePathname(),
     en = locale === "en";
+  const search = useSearchParams().toString();
+  const [localeError, setLocaleError] = useUiError();
+  useEffect(() => {
+    document.documentElement.lang = locale;
+    void cookieStore.set({
+      name: "ledger_locale",
+      value: locale,
+      path: "/",
+      expires: Date.now() + 31536000000,
+      sameSite: "lax",
+    });
+  }, [locale]);
+  function remember(next: "en" | "vi") {
+    void cookieStore.set({
+      name: "ledger_locale",
+      value: next,
+      path: "/",
+      expires: Date.now() + 31536000000,
+      sameSite: "lax",
+    });
+    void callApi("/api/settings", "PATCH", { uiLocale: next }).catch(
+      (error) => {
+        if (error instanceof ClientError && error.code === "UNAUTHENTICATED")
+          return;
+        setLocaleError(
+          error instanceof Error ? error.message : "LOCALE_SAVE_FAILED",
+        );
+      },
+    );
+  }
   if (pathname.endsWith("/login")) return children;
   const links = [
     ["", en ? "Overview" : "Tổng quan"],
@@ -20,6 +53,7 @@ export function AppFrame({
     ["pending", en ? "Review inbox" : "Hộp chờ duyệt"],
     ["tasks", en ? "Tasks" : "Công việc"],
     ["chat", en ? "Chat" : "Trò chuyện"],
+    ["trash", en ? "Trash" : "Thùng rác"],
     ["projects", en ? "Projects" : "Dự án"],
     ["settings", en ? "Settings" : "Cài đặt"],
   ] as const;
@@ -58,13 +92,15 @@ export function AppFrame({
           <div className="cluster">
             <Link
               aria-label="Tiếng Việt"
-              href={pathname.replace(`/${locale}`, "/vi")}
+              href={`${pathname.replace(`/${locale}`, "/vi")}${search ? `?${search}` : ""}`}
+              onClick={() => remember("vi")}
             >
               VI
             </Link>
             <Link
               aria-label="English"
-              href={pathname.replace(`/${locale}`, "/en")}
+              href={`${pathname.replace(`/${locale}`, "/en")}${search ? `?${search}` : ""}`}
+              onClick={() => remember("en")}
             >
               EN
             </Link>
@@ -72,6 +108,11 @@ export function AppFrame({
         </header>
         <div className="ledger-content">
           <VisitMaintenance locale={locale} />
+          {localeError && (
+            <p className="notice danger" role="alert">
+              {localeError}
+            </p>
+          )}
           {children}
         </div>
       </div>

@@ -31,7 +31,7 @@ export function ProjectPanel({
     );
   }
   return (
-    <section>
+    <section className="panel">
       <h2>{en ? "Projects & participants" : "Dự án và người tham gia"}</h2>
       <form onSubmit={create}>
         <label>

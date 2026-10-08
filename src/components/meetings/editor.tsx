@@ -6,13 +6,14 @@ import { localTimeToIso } from "../../shared/local-time";
 import { requestApi } from "../api-client";
 import { projectsSchema, settingsSchema } from "../settings-contracts";
 import { useResource } from "../use-resource";
+import { useUiError } from "../use-ui-error";
 
 export function MeetingEditor({ locale }: { readonly locale: "vi" | "en" }) {
   const en = locale === "en",
     projects = useResource("/api/projects", projectsSchema),
     settings = useResource("/api/settings", settingsSchema);
   const [raw, setRaw] = useState(""),
-    [error, setError] = useState(""),
+    [error, setError] = useUiError(),
     [busy, setBusy] = useState(false);
   const key = useRef(crypto.randomUUID()),
     duplicate = useRef(false);

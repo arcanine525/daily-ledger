@@ -1,0 +1,22 @@
+{
+  "error_generic": "Could not complete the request. Please try again.",
+  "error_UNAUTHENTICATED": "Your session has expired. Please sign in again.",
+  "error_PROVIDER_AUTH_FAILED": "The provider rejected the credentials. Update the saved token.",
+  "error_CHAT_PROFILE_REQUIRED": "Choose a chat provider in settings first.",
+  "error_ANALYSIS_CONFIGURATION_REQUIRED": "Choose an analysis provider in settings first.",
+  "error_PROVIDER_UNAVAILABLE": "The provider is unavailable. Your saved work is safe; retry later.",
+  "error_SOURCE_CHANGED": "The source changed. Reload and review the current version.",
+  "error_CHAT_SOURCE_UNAVAILABLE": "This source is unavailable or has been deleted.",
+  "error_PURGE_CONFIRMATION_REQUIRED": "Enter the exact meeting title to confirm permanent deletion.",
+  "error_RESTORE_WINDOW_EXPIRED": "The thirty-day restore window has expired.",
+  "error_RETRY_AFTER_REQUIRED": "Wait for the retry window before continuing.",
+  "error_INVALID_TIMEZONE": "Choose a valid IANA timezone.",
+  "error_INCOMPLETE_CHAT_STREAM": "The reply was interrupted and is not verified. Check saved progress and resume.",
+  "state_READY": "Ready",
+  "state_RUNNING": "Running",
+  "state_COMPLETED": "Completed",
+  "state_CANCELLED": "Cancelled",
+  "state_FAILED": "Failed",
+  "state_PAUSED_RETRYABLE": "Paused; retry available",
+  "status_saved": "Saved"
+}

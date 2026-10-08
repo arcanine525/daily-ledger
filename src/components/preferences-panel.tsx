@@ -13,7 +13,7 @@ export function PreferencesPanel({
   readonly onSave: (event: FormEvent<HTMLFormElement>) => Promise<void>;
 }) {
   return (
-    <section>
+    <section className="panel">
       <h2>{en ? "Identity & preferences" : "Danh tính và tùy chọn"}</h2>
       <form onSubmit={onSave} key={JSON.stringify(settings)}>
         <label>
@@ -26,7 +26,7 @@ export function PreferencesPanel({
         </label>
         <label>
           {en ? "Interface language" : "Ngôn ngữ giao diện"}
-          <select name="uiLocale" defaultValue={settings.uiLocale}>
+          <select name="uiLocale" defaultValue={en ? "en" : "vi"}>
             <option value="vi">Tiếng Việt</option>
             <option value="en">English</option>
           </select>

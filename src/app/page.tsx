@@ -5,6 +5,8 @@ import { readSettings } from "../server/settings/preferences";
 
 export default async function Home() {
   let locale = "vi";
+  const preferred = (await cookies()).get("ledger_locale")?.value;
+  if (preferred === "en" || preferred === "vi") redirect(`/${preferred}`);
   if ((await cookies()).get("ledger_session")) {
     try {
       const session = await authenticate(

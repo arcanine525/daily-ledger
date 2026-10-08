@@ -13,6 +13,7 @@ import {
   projectsSchema,
   settingsSchema,
 } from "./settings-contracts";
+import { errorText } from "./ui-copy";
 
 export function Management({ locale }: { readonly locale: "vi" | "en" }) {
   const en = locale === "en";
@@ -40,9 +41,14 @@ export function Management({ locale }: { readonly locale: "vi" | "en" }) {
   }, []);
   useEffect(() => {
     load().catch((error) =>
-      setMessage(error instanceof Error ? error.message : "REQUEST_FAILED"),
+      setMessage(
+        errorText(
+          error instanceof Error ? error.message : "REQUEST_FAILED",
+          locale,
+        ),
+      ),
     );
-  }, [load]);
+  }, [load, locale]);
   async function run(action: () => Promise<unknown>) {
     try {
       await action();
@@ -50,7 +56,12 @@ export function Management({ locale }: { readonly locale: "vi" | "en" }) {
       setMessage(en ? "Saved" : "Đã lưu");
       return true;
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "REQUEST_FAILED");
+      setMessage(
+        errorText(
+          error instanceof Error ? error.message : "REQUEST_FAILED",
+          locale,
+        ),
+      );
       return false;
     }
   }
@@ -75,9 +86,11 @@ export function Management({ locale }: { readonly locale: "vi" | "en" }) {
       location.assign(`/${f.get("uiLocale")}/settings`);
   }
   return (
-    <main className="shell">
+    <main className="workspace">
       <nav>
-        <Link href={`/${locale}`}>Workspace</Link>
+        <Link href={`/${locale}`}>
+          {en ? "Workspace" : "Không gian làm việc"}
+        </Link>
         <Link href="/vi/settings">VI</Link>
         <Link href="/en/settings">EN</Link>
         <button
@@ -93,7 +106,7 @@ export function Management({ locale }: { readonly locale: "vi" | "en" }) {
           {en ? "Sign out" : "Đăng xuất"}
         </button>
       </nav>
-      <p className="eyebrow">DAILY LEDGER / PHASE 1</p>
+      <p className="eyebrow">DAILY LEDGER</p>
       <h1>{en ? "Workspace settings" : "Cài đặt workspace"}</h1>
       {message && <p role="status">{message}</p>}
       {settings ? (

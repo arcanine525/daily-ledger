@@ -3,6 +3,7 @@ import { useState } from "react";
 import { callApi } from "../api-client";
 import { Modal } from "../source-dialog";
 import { useResource } from "../use-resource";
+import { useUiError } from "../use-ui-error";
 import { taskList } from "../workspace-schemas";
 export function ManualLinkDialog({
   actionId,
@@ -21,7 +22,7 @@ export function ManualLinkDialog({
     [cursor, setCursor] = useState(""),
     [search, setSearch] = useState(""),
     [selected, setSelected] = useState(""),
-    [error, setError] = useState("");
+    [error, setError] = useUiError();
   const tasks = useResource(
     `/api/tasks?${new URLSearchParams({ projectId, ...(cursor ? { cursor } : {}) })}`,
     taskList,

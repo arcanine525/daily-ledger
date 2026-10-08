@@ -112,7 +112,7 @@ export function ReviewInbox({
                   !item.changes.requiresReconciliation &&
                   item.state === "PENDING" && (
                     <input
-                      aria-label={`Chọn ${item.action.title}`}
+                      aria-label={`${en ? "Select" : "Chọn"} ${item.action.title}`}
                       type="checkbox"
                       checked={selected.includes(item.id)}
                       onChange={(event) =>

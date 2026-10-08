@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { runStateText } from "../ui-copy";
 import { type ChatFilters, filtersSchema } from "./contracts";
 import { ChatFilterFields } from "./filters";
 import { ChatMessages } from "./messages";
@@ -41,7 +42,8 @@ export function ChatThread({
             max={Math.max(1, total)}
           />
           <p>
-            {completed} / {total} · {chat.run.state}
+            {completed} / {total} ·{" "}
+            {runStateText(chat.run.state, en ? "en" : "vi")}
           </p>
           <div className="cluster">
             <button type="button" onClick={chat.resume} disabled={chat.busy}>

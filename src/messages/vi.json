@@ -1,0 +1,22 @@
+{
+  "error_generic": "Không thể hoàn tất yêu cầu. Vui lòng thử lại.",
+  "error_UNAUTHENTICATED": "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
+  "error_PROVIDER_AUTH_FAILED": "Provider từ chối thông tin xác thực. Hãy cập nhật token đã lưu.",
+  "error_CHAT_PROFILE_REQUIRED": "Hãy chọn provider chat trong cài đặt trước.",
+  "error_ANALYSIS_CONFIGURATION_REQUIRED": "Hãy chọn provider phân tích trong cài đặt trước.",
+  "error_PROVIDER_UNAVAILABLE": "Provider chưa sẵn sàng. Dữ liệu đã lưu vẫn an toàn; hãy thử lại sau.",
+  "error_SOURCE_CHANGED": "Nguồn đã thay đổi. Hãy tải lại và xem xét phiên bản hiện tại.",
+  "error_CHAT_SOURCE_UNAVAILABLE": "Nguồn không còn khả dụng hoặc đã bị xóa.",
+  "error_PURGE_CONFIRMATION_REQUIRED": "Nhập đúng tên cuộc họp để xác nhận xóa vĩnh viễn.",
+  "error_RESTORE_WINDOW_EXPIRED": "Đã hết thời hạn khôi phục ba mươi ngày.",
+  "error_RETRY_AFTER_REQUIRED": "Hãy chờ hết thời gian giới hạn trước khi tiếp tục.",
+  "error_INVALID_TIMEZONE": "Hãy chọn múi giờ IANA hợp lệ.",
+  "error_INCOMPLETE_CHAT_STREAM": "Câu trả lời bị gián đoạn và chưa xác thực. Kiểm tra tiến độ đã lưu rồi tiếp tục.",
+  "state_READY": "Sẵn sàng",
+  "state_RUNNING": "Đang chạy",
+  "state_COMPLETED": "Hoàn tất",
+  "state_CANCELLED": "Đã hủy",
+  "state_FAILED": "Thất bại",
+  "state_PAUSED_RETRYABLE": "Tạm dừng; có thể thử lại",
+  "status_saved": "Đã lưu"
+}

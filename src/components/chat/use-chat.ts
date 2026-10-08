@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { callApi } from "../api-client";
+import { useUiError } from "../use-ui-error";
 import {
   type ChatFilters,
   type ChatMessage,
@@ -15,7 +16,7 @@ export function useChat(id: string) {
   const [messages, setMessages] = useState<ChatMessage[]>([]),
     [run, setRun] = useState<ChatRun | null>(null),
     [busy, setBusy] = useState(false),
-    [error, setError] = useState(""),
+    [error, setError] = useUiError(),
     [provisional, setProvisional] = useState("");
   const mounted = useRef(true),
     paused = useRef(false),
@@ -43,7 +44,7 @@ export function useChat(id: string) {
       paused.current = true;
       abort.current?.abort();
     };
-  }, [reload]);
+  }, [reload, setError]);
   async function loadRun(runId: string) {
     const current = chatRunSchema.parse(
       await callApi(`/api/chat-runs/${runId}`),

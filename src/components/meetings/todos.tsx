@@ -3,6 +3,7 @@ import { callApi } from "../api-client";
 import { Modal } from "../source-dialog";
 import { ManualLinkDialog } from "../tasks/manual-link-dialog";
 import { ReviewInbox } from "../tasks/review-inbox";
+import { useUiError } from "../use-ui-error";
 import type { Meeting } from "../workspace-schemas";
 
 export function MeetingTodos({
@@ -26,7 +27,7 @@ export function MeetingTodos({
   const en = locale === "en",
     [link, setLink] = useState<string | null>(null),
     [editing, setEditing] = useState<Meeting["actions"][number] | null>(null),
-    [error, setError] = useState("");
+    [error, setError] = useUiError();
   const [scope, setScope] = useState("ALL");
   const actions = meeting.actions.filter((action) =>
     scope === "MINE"

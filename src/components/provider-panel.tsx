@@ -36,7 +36,7 @@ export function ProviderPanel({
     }
   }
   return (
-    <section>
+    <section className="panel">
       <h2>{en ? "AI profiles" : "Cấu hình AI"}</h2>
       <p>
         {en
@@ -128,7 +128,15 @@ export function ProviderPanel({
             name="token"
             type="password"
             autoComplete="off"
-            placeholder={editing ? "Để trống để giữ token cũ" : "Nhập token"}
+            placeholder={
+              editing
+                ? en
+                  ? "Leave blank to keep the saved token"
+                  : "Để trống để giữ token cũ"
+                : en
+                  ? "Enter token"
+                  : "Nhập token"
+            }
           />
         </label>
         <button type="submit">{en ? "Save profile" : "Lưu profile"}</button>
