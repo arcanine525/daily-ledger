@@ -1,0 +1,28 @@
+import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+const project=process.env.DEPLOY_TEST_PROJECT??"ledger-phase4-20261008",origin=process.env.DEPLOY_TEST_ORIGIN??"http://127.0.0.1:3300",suffix=crypto.randomUUID();
+assert.equal(new URL(origin).hostname,"127.0.0.1");assert.ok(project.startsWith("ledger-"));
+let cookie="",csrf="";
+async function api(path,method="GET",body,key=suffix){for(let attempt=0;attempt<3;attempt++){const response=await fetch(`${origin}${path}`,{method,headers:{origin,cookie,"x-csrf-token":csrf,"Content-Type":"application/json","Idempotency-Key":key},...(body===undefined?{}:{body:JSON.stringify(body)}),signal:AbortSignal.timeout(60000)});const data=await response.json();if(response.status===429&&attempt<2){const seconds=Number(response.headers.get("retry-after"));assert.ok(seconds>0&&seconds<=120);await new Promise(resolve=>setTimeout(resolve,seconds*1000));continue;}assert.ok(response.ok,`${path}: ${response.status} ${data.code??""}`);if(path==="/api/auth/login"){cookie=response.headers.get("set-cookie").split(";")[0];csrf=data.csrfToken;}return data;}throw new Error("Retry window exhausted");}
+await api("/api/auth/login","POST",{email:"deployment@example.test",password:"deployment-fixture-password"});
+const projectId=(await api("/api/projects","POST",{name:`Recovery ${suffix}`})).id;
+await api(`/api/projects/${projectId}/participants`,"POST",{displayName:"Mai",aliases:["Mai"],isSelf:true});
+const quote="Mai: I will review the API tomorrow.",raw=`${quote}\n${"Alex: Routine progress with no action.\n".repeat(4000)}`;
+const meeting=(await api("/api/meetings","POST",{projectId,title:"Two-hour fixture",occurredAt:"2026-10-08T02:00:00Z",meetingTimezone:"UTC",rawText:raw})).id,analysis=await api(`/api/meetings/${meeting}/analysis-runs`,"POST",{}),first=analysis.snapshot.steps[0];
+await api(`/api/analysis-runs/${analysis.id}/step`,"POST",{stepKey:first});
+execFileSync("docker",["compose","-f","compose.deploy-test.yaml","-p",project,"restart","app"],{stdio:"inherit",timeout:60000});
+let ready=false;for(let attempt=0;attempt<30;attempt++){try{ready=(await fetch(`${origin}/api/health/ready`,{signal:AbortSignal.timeout(3000)})).ok;}catch{}if(ready)break;await new Promise(resolve=>setTimeout(resolve,1000));}assert.ok(ready);
+const restored=await api(`/api/analysis-runs/${analysis.id}`);assert.equal(restored.steps.find(step=>step.key===first).state,"succeeded");
+for(const stepKey of analysis.snapshot.steps.slice(1))await api(`/api/analysis-runs/${analysis.id}/step`,"POST",{stepKey});
+const detail=await api(`/api/meetings/${meeting}`);assert.equal(detail.revisions[0].rawText,raw);assert.equal(detail.analyses.length,1);
+const proposal=detail.actions[0].proposals[0],approval=await api(`/api/task-proposals/${proposal.id}/decision`,"POST",{decision:"ACCEPT"},`approve-${suffix}`);assert.equal((await api(`/api/task-proposals/${proposal.id}/decision`,"POST",{decision:"ACCEPT"},`approve-${suffix}`)).taskId,approval.taskId);
+const later=(await api("/api/meetings","POST",{projectId,title:"Cross-day evidence",occurredAt:"2026-10-09T02:00:00Z",meetingTimezone:"UTC",rawText:"Mai: Migration remains blocked by staging."},`later-${suffix}`)).id;
+const thread=(await api("/api/conversations","POST",{title:"Read-only cross-day"})).id,run=await api(`/api/conversations/${thread}/messages`,"POST",{question:"Migration đang vướng gì? Do not mutate work.",filters:{projectId}});
+for(const stepKey of ["plan","retrieve"])await api(`/api/chat-runs/${run.id}/step`,"POST",{stepKey});
+const response=await fetch(`${origin}/api/chat-runs/${run.id}/step`,{method:"POST",headers:{origin,cookie,"x-csrf-token":csrf,"Content-Type":"application/json"},body:JSON.stringify({stepKey:"answer"})}),events=await response.text();assert.ok(events.includes('"verified":true'));
+const messages=await api(`/api/conversations/${thread}/messages`),body=messages.find(message=>message.role==="assistant").body;
+await api(`/api/meetings/${later}/trash`,"POST",{});assert.equal((await api(`/api/conversations/${thread}/messages`)).find(message=>message.role==="assistant").body,body);
+await api(`/api/meetings/${later}/restore`,"POST",{});assert.equal((await api(`/api/conversations/${thread}/messages`)).find(message=>message.role==="assistant").contextEligible,true);
+await api(`/api/meetings/${later}/purge`,"POST",{confirmationTitle:"Cross-day evidence"});assert.equal((await api(`/api/conversations/${thread}/messages`)).find(message=>message.role==="assistant").contextEligible,false);
+assert.equal((await api(`/api/tasks?projectId=${projectId}`)).total,1);
+process.stdout.write(JSON.stringify({rawCharacters:raw.length,steps:analysis.snapshot.steps.length,resumedAfterProcessRestart:true,approvalReplayed:true,crossDayCitation:true,trashRestorePurge:true,canonicalTasks:1})+"\n");

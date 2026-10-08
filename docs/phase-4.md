@@ -66,5 +66,24 @@ and belong to Task19 verification; no assertions or crypto parameters were weake
 unrelated workloads were not stopped. The isolated deployment stack is stopped with its
 fixture volume preserved. No Vercel deployment or remote smoke is claimed.
 
-Tasks19–20 and F1–F4 are pending. Task19 full-suite verification is blocked pending an
-isolated-resource rerun and investigation of any failures that remain.
+## Task 19: recovery, concurrency and repeated whole-stack checks
+
+The earlier failures did not reproduce on a targeted analysis/chat rerun (11passed).
+Unit files now execute sequentially to reduce peak memory without weakening crypto
+parameters, assertions or test budgets. Added real-DB simultaneous raw-save/approval
+checks and expired/cancelled chat fencing; HTTP adversarial checks reject CSRF, insecure
+metadata endpoints, stale writes and SQL-like lookup input without changing confirmed work.
+
+The isolated Compose driver exercised a156037-character transcript across35steps,
+restarted the application after a saved checkpoint, resumed without duplicate publication,
+replayed approval, queried cross-day evidence, and checked retained chat plus context
+revocation across trash/restore/purge. It respects429 Retry-After rather than bypassing
+the rate limiter. The synthetic fixture volume is preserved and the stack is stopped.
+
+`pnpm verify` passed twice consecutively on fresh suite seeds:18 unit,49 integration,
+20 HTTP/Chrome E2E tests each time, with lint/typecheck/build passing and no skipped tests.
+Evidence: `.omo/evidence/task-19-plan/`. The historical null-result cause was not confirmed;
+no speculative fallback was added. These results supersede the earlier failed full runs,
+but do not claim a fix to an unconfirmed library/resource issue or real-model quality.
+
+Task20 and F1–F4 remain pending.

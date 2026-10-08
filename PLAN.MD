@@ -442,7 +442,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
   - QA happy: fresh volume migration + owner CLI + ready endpoint; failure: missing encryption key/unhealthy DB fail readiness without secret leak; production Vercel env with test bypass fails startup. Evidence `.omo/evidence/task-18-plan.txt`.
   - Commit: Y | `build(deploy): support Vercel and standalone Compose`.
 
-- [ ] 19. Adversarial regression và whole-stack verification
+- [x] 19. Adversarial regression và whole-stack verification
   - What: cross-boundary tests for concurrency, crash/retry, injection, SSRF, long transcript, cross-language retrieval and retained-chat/context-revocation races; exercise all Q1–Q28 regressions from S13 on built app + real DB + mock AI only. Fix owning modules, do not weaken assertions or infer live-model quality.
   - Parallelization: Wave 4; depends 12–18; blocks20.
   - References: S3–S11 and Verification; `tests/e2e/adversarial.spec.ts`, `tests/integration/concurrency.test.ts`, `scripts/verify.ts`.

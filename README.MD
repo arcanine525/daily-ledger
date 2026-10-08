@@ -10,8 +10,8 @@ giao diện cuộc họp/công việc, PostgreSQL lexical search, chat backend c
 và trash/restore/purge an toàn. **Phase 4 Task16 đã bổ sung Chat UI** tại `/vi/chat`
 và `/en/chat`; **Task17 đã bổ sung giao diện thùng rác và kiểm chứng EN/VI,
 accessibility, responsive**. **Task18 có cấu hình Vercel và Docker standalone đã
-kiểm chứng trên stack test riêng.** Tasks19–20 còn lại đang triển khai; whole-suite
-hiện có lỗi ở các stress fixture khi máy chạy nhiều workload, chưa tuyên bố hoàn tất.
+kiểm chứng trên stack test riêng.** **Task19 đã chạy whole-suite xanh hai lượt**,
+bao gồm recovery/concurrency/adversarial checks. Task20 và F1–F4 còn lại chưa hoàn tất.
 Xem `docs/phase-3.md` và `docs/phase-4.md` cho phạm vi và bằng chứng kiểm chứng.
 
 Task 3 đã bổ sung session cá nhân và form đăng nhập. Chép `.env.example` thành
