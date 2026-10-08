@@ -42,4 +42,29 @@ eleven routes in both languages. Overflow was checked at390/768/1440px on every 
 keyboard confirmation/restore and six trash screenshots were checked. This is not a claim
 of comprehensive WCAG or Lighthouse certification. Evidence: `.omo/evidence/task-17-plan/`.
 
-Tasks18–20 and F1–F4 are pending.
+## Task 18: Vercel and standalone Compose configuration
+
+Added multi-stage Node22.23.3/pnpm10.32.1 images with an ops target, generated Prisma
+Client, non-root standalone runtime/static assets and pre-listen environment validation.
+Compose orders healthy Postgres → one-shot migration → application readiness, retains
+the original local volume/ports and adds a fixture profile plus an isolated deployment
+test stack. Vercel generates Prisma, validates environment before build and uses Node22
+from the package engines. Local provider bypass is rejected on Vercel. Deployment and
+backup commands are documented in `docs/deployment.md`.
+
+Scoped verification: Docker configurations validated; fresh isolated image/migration,
+hidden-password owner CLI, login, static assets, fixture analysis, approval and streamed
+chat all passed. Runtime uid1000; down/up without-v preserved raw hash and usable encrypted
+credentials. DB stop produced readiness503 without connection details, restart200. Bad-key
+and Vercel-bypass containers exited before binding. Deployment integration tests:2 passed.
+
+The whole suite is **not currently green**: under substantial concurrent machine load,
+the crypto unit fixture exceeded5s on one run, the21-meeting fixture exceeded30s on another,
+and an analysis setup observed an unexpected null Prisma create result. The latest full
+run had38 passed/4 failed/4 skipped integration tests. These broader failures are unresolved
+and belong to Task19 verification; no assertions or crypto parameters were weakened and
+unrelated workloads were not stopped. The isolated deployment stack is stopped with its
+fixture volume preserved. No Vercel deployment or remote smoke is claimed.
+
+Tasks19–20 and F1–F4 are pending. Task19 full-suite verification is blocked pending an
+isolated-resource rerun and investigation of any failures that remain.

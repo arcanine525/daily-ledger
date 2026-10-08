@@ -16,4 +16,4 @@ createServer(async(request,response)=>{
     if(wire.stream){response.setHeader("Content-Type","text/event-stream");const json=JSON.stringify(data);for(let index=0;index<json.length;index+=17)response.write(`data: ${JSON.stringify({choices:[{delta:{content:json.slice(index,index+17)},finish_reason:null}]})}\n\n`);response.end(`data: ${JSON.stringify({choices:[{delta:{},finish_reason:"stop"}]})}\n\ndata: [DONE]\n\n`);return;}
     response.setHeader("Content-Type","application/json");response.end(JSON.stringify({choices:[{message:{content:JSON.stringify(data)},finish_reason:"stop"}],usage:{prompt_tokens:10,completion_tokens:10}}));
   }catch{response.writeHead(400);response.end(JSON.stringify({error:"INVALID_FIXTURE_REQUEST"}));}
-}).listen(3201,"127.0.0.1",()=>process.stdout.write("Deterministic mock provider listening on 127.0.0.1:3201\n"));
+}).listen(3201,process.env.MOCK_PROVIDER_HOST??"127.0.0.1",()=>process.stdout.write("Deterministic mock provider listening on port3201\n"));

@@ -1,4 +1,45 @@
 services:
+  app:
+    build:
+      context: .
+      target: runtime
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: ${CONTAINER_DATABASE_URL:-postgresql://ledger:ledger@db:5432/ledger}
+      DIRECT_URL: ${CONTAINER_DIRECT_URL:-postgresql://ledger:ledger@db:5432/ledger}
+      APP_ORIGIN: ${APP_ORIGIN:-http://127.0.0.1:3000}
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+  migrate:
+    build:
+      context: .
+      target: ops
+    environment:
+      DIRECT_URL: ${CONTAINER_DIRECT_URL:-postgresql://ledger:ledger@db:5432/ledger}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+  ops:
+    build:
+      context: .
+      target: ops
+    profiles: ["ops"]
+    environment:
+      DIRECT_URL: ${CONTAINER_DIRECT_URL:-postgresql://ledger:ledger@db:5432/ledger}
+    depends_on:
+      db:
+        condition: service_healthy
   db:
     image: postgres:17-alpine
     environment:

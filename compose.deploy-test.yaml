@@ -1,0 +1,69 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ledger
+      POSTGRES_PASSWORD: ledger
+      POSTGRES_DB: ledger_deploy
+    volumes:
+      - deployment-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ledger -d ledger_deploy"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  migrate:
+    image: daily-ledger-ops:test
+    build:
+      context: .
+      target: ops
+    environment:
+      DIRECT_URL: postgresql://ledger:ledger@db:5432/ledger_deploy
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+  mock-provider:
+    image: daily-ledger-ops:test
+    command: ["node", "scripts/mock-provider.mjs"]
+    environment:
+      MOCK_PROVIDER_HOST: 0.0.0.0
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3201/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+  app:
+    image: daily-ledger-app:test
+    build:
+      context: .
+      target: runtime
+    environment:
+      DATABASE_URL: postgresql://ledger:ledger@db:5432/ledger_deploy
+      DIRECT_URL: postgresql://ledger:ledger@db:5432/ledger_deploy
+      APP_ORIGIN: http://127.0.0.1:${DEPLOY_TEST_PORT:-3300}
+      PROVIDER_ENCRYPTION_KEY: AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE=
+      PROVIDER_ENCRYPTION_KEY_ID: deployment-fixture
+      AI_DEV_ALLOWED_ORIGINS: http://mock-provider:3201
+    ports:
+      - "127.0.0.1:${DEPLOY_TEST_PORT:-3300}:3000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      mock-provider:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+  ops:
+    image: daily-ledger-ops:test
+    profiles: ["ops"]
+    environment:
+      DIRECT_URL: postgresql://ledger:ledger@db:5432/ledger_deploy
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  deployment-db:

@@ -1,0 +1,5 @@
+{
+  "framework": "nextjs",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "buildCommand": "pnpm exec prisma generate && node --experimental-strip-types scripts/deploy/check-env.mjs && pnpm build"
+}

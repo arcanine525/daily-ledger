@@ -434,7 +434,7 @@ Ledger để worker truy vết; mỗi quyết định đã được tích hợp 
   - QA happy: EN→VI navigation + reload, keyboard confirm/reject dialog; failure: long Vietnamese text and error message at390px has no horizontal overflow, changing UI language does not regenerate old summary. Evidence `.omo/evidence/task-17-plan/` six locale/viewport screenshots minimum.
   - Commit: Y | `feat(i18n): polish accessible English Vietnamese UI`.
 
-- [ ] 18. Vercel release config và portable Docker Compose
+- [x] 18. Vercel release config và portable Docker Compose
   - What: S11 standalone image, healthchecks, persistent Postgres, one-shot migration, no worker/cron; env validation, preview DB isolation, Vercel Node timeouts. Add compose.test fixture provider, admin CLI runtime target and backup commands.
   - Parallelization: Wave 4; depends 3,4,9,10,14; blocks 19,20.
   - References: S2/S11,R1–R3/R7; `Dockerfile`, `compose*.yaml`, `.env.example`, `scripts/deploy/`, `tests/integration/deployment.test.ts`.

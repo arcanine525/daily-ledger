@@ -1,4 +1,19 @@
 services:
+  mock-provider:
+    build:
+      context: .
+      target: ops
+    command: ["node", "scripts/mock-provider.mjs"]
+    environment:
+      MOCK_PROVIDER_HOST: 0.0.0.0
+    profiles: ["fixture"]
+    ports:
+      - "127.0.0.1:3201:3201"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3201/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
   test-db:
     image: postgres:17-alpine
     environment:
